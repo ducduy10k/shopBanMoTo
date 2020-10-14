@@ -1,0 +1,82 @@
+.backgroundyellow {
+    background-color: yellow !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+canvas {
+    position: absolute;
+}
+
+.motkhoi h5:hover {
+    background-color: wheat;
+}
+
+.motkhoi h5 {
+    margin: 0;
+    padding: 10px 0;
+    border-radius: 5px;
+    background-color: #ccc;
+    margin: 0;
+    text-align: center;
+}
+
+.motkhoi .noidung {
+    border: 1px #ccc solid;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding: 5px;
+}
+
+.motkhoi {
+    margin: 5px;
+}
+
+#M3D {
+    padding: 10px 20px;
+    display: block;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background-color: violet;
+}
+
+#instructions {
+    position: absolute;
+    width: 30%;
+    top: 50px;
+    left: 10px;
+    bottom: 20%;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    overflow-y: scroll;
+    font-family: sans-serif;
+    font-size: 0.8em;
+    line-height: 2em;
+}
+
+.duration {
+    font-size: 2em;
+}
+
+#shop-position {
+    display: block;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+}
+
+#shop-position select {
+    background-color: white;
+    box-shadow: 0 0 10px 2px rgba(0, 0, 0, .1);
+}
+
+
+/*search location in mapbox */
+
+.mapboxgl-ctrl-geocoder--icon-search {
+    right: 10px !important;
+    left: auto !important;
+    top: 10px !important;
+}
