@@ -12,5 +12,6 @@
     "\\resources\\views\\pages\\product",
     "\\routes"
   ],
+  "SelectedNode": "\\app\\Http\\Controllers\\CartController.php",
   "PreviewInSolutionExplorer": false
 }

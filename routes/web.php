@@ -92,6 +92,8 @@ Route::post('update-product-feature/{product_feature_id}', 'ProductFeatureContro
 // Cart 
 Route::post('save-cart', 'CartController@save_cart');
 
+Route::get('show-cart', 'CartController@show_cart');
+
 
 
 
