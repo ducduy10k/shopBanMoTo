@@ -2,8 +2,15 @@
   "ExpandedNodes": [
     "",
     "\\app",
-    "\\app\\Console",
-    "\\app\\Exceptions"
+    "\\app\\Http",
+    "\\app\\Http\\Controllers",
+    "\\resources",
+    "\\resources\\lang",
+    "\\resources\\lang\\en",
+    "\\resources\\views",
+    "\\resources\\views\\pages",
+    "\\resources\\views\\pages\\product",
+    "\\routes"
   ],
   "PreviewInSolutionExplorer": false
 }
