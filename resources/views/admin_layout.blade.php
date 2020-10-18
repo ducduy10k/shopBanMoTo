@@ -26,6 +26,17 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <script src="{{asset('public/backend/js/jquery2.0.3.min.js')}}"></script>
 <script src="{{asset('public/backend/js/raphael-min.js')}}"></script>
 </head>
+<style>
+*{
+    margin:0;
+    padding:0;
+}
+
+body{
+    width:100vw;
+}
+    
+</style>
 <body>
 <section id="container">
 <!--header start-->
@@ -147,7 +158,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <!--sidebar end-->
 <!--main content start-->
 <section id="main-content">
-	<section class="wrapper" style="background:white;min-height:calc(100vh - 142.4px);">
+	<section class="wrapper" style="background:white;min-height:calc(100vh - 142.4px);width:100%;">
 		@yield('admin-content')
 	</section>		
 		

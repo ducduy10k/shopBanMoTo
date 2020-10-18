@@ -156,9 +156,9 @@
             <div class="page">
                 <div class="layout-d">
                     <div class="layout-d-column" style="height: 100%;width: 100%;">
-                    <div class="layout-i-map" id="anh-i-map" style="float:left;width: 100%;">
-                    <img src="{{('public/frontend/images/home/z1000.jpg')}}" width="100%" alt="">
-                    </div>
+                        <div class="layout-i-map" id="anh-i-map" style="float:left;width: 100%;">
+                            <img src="{{('public/frontend/images/home/z1000.jpg')}}" width="100%" alt="">
+                        </div>
                         <table style="background-color: white;border: 1px solid black;height: 100%;">
                             <tr>
                                 <th style="width: 40%;">
@@ -256,9 +256,9 @@
                         </table>
                     </div>
                     <div class="layout-i-map" id="anh-i-map" style="float:left;width: 50%;">
-                       
 
-                        
+
+
                     </div>
 
                     <span style="position:absolute;bottom:0;right:5px;">

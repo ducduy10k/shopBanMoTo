@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="utf-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -110,7 +111,7 @@ body {
                             <a href="{{URL::to('/trang-chu')}}"><img src="{{'public/frontend/images/home/logo.png'}}"
                                     alt="" /></a>
                         </div>
-                       
+
                     </div>
                     <div class="col-sm-8">
                         <div class="shop-menu pull-right">
@@ -205,7 +206,7 @@ body {
                 class="fab fa-facebook-messenger"></i>
         </div>
         <!-- Zalo -->
-        <div class="item-infor"  id='open-modal-zalo'
+        <div class="item-infor" id='open-modal-zalo'
             style="cursor: pointer;position: absolute;width:48px;border-radius: 50%;background:url('../public/frontend/images/home/logo-zalo-vector.png') ; transform: translateY(125px);height: 48px;border:2px solid white;overflow: hidden;">
             <img style="width: 52px;height: 52px;border-radius: 50px;transform: translate(-2px, -7px);"
                 src="{{asset('public/frontend/images/home/logo-zalo-vector.png')}}" alt="" id="contactZalo">
@@ -219,25 +220,27 @@ body {
 
     <div class="" id="map-infor"
         style="position: fixed;width:50vw;height: calc(70vh - 55px);top :10%; right: 0 ;z-index: 2;transform:translateX(100%);transition: all 0.9s ease 0.1s;box-shadow: rgb(204, 204, 204) 5px 5px 5px;border: 1px solid #ccc;">
-        <div class='modal-title-x' style="width: 100%;height: 30px;background: white;/* bottom: 100%; */;padding:5px 15px;   "> 
-            Vị trí 
-            <span onclick="closemap()"><i class='fa fa-times' style="right: 0;position: absolute;padding: 9px 13px;" ></i></span>
+        <div class='modal-title-x'
+            style="width: 100%;height: 30px;background: white;/* bottom: 100%; */;padding:5px 15px;   ">
+            Vị trí
+            <span onclick="closemap()"><i class='fa fa-times'
+                    style="right: 0;position: absolute;padding: 9px 13px;"></i></span>
         </div>
         <div class='modal-body-x' style="position:Relative;height: calc(100% - 30px);width:100%;">
-        <div style=" height:100% !important;width:100% !important;" id="map"></div>
-        <div id="M3D" onclick="M3D()">3D</div>
-        <div id="shop-position">
-            <select name="" id="">
-                <option value="">Hà Nội</option>
-                <option value="">Đà Nẵng</option>
-                <option value="">TP Hồ Chí Minh</option>
-            </select>
-        </div>
-        <div>
-            
-        </div>
-        <!-- Instruction -->
-        <div style="display: none;" id="instructions">hello</div>
+            <div style=" height:100% !important;width:100% !important;" id="map"></div>
+            <div id="M3D" onclick="M3D()">3D</div>
+            <div id="shop-position">
+                <select name="" id="">
+                    <option value="">Hà Nội</option>
+                    <option value="">Đà Nẵng</option>
+                    <option value="">TP Hồ Chí Minh</option>
+                </select>
+            </div>
+            <div>
+
+            </div>
+            <!-- Instruction -->
+            <div style="display: none;" id="instructions">hello</div>
         </div>
     </div>
 
@@ -396,11 +399,13 @@ body {
                         <h2>Danh mục sản phẩm</h2>
                         <div class="panel-group category-products" id="accordian">
                             <!--category-productsr-->
-                            
+
                             @foreach($category as $key =>$cate)
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <h4 class="panel-title"><a href="{{URL::to('/danh-muc-san-pham/'.$cate->category_id)}}">{{$cate->category_name}}</a></h4>
+                                    <h4 class="panel-title"><a
+                                            href="{{URL::to('/danh-muc-san-pham/'.$cate->category_id)}}">{{$cate->category_name}}</a>
+                                    </h4>
                                 </div>
                             </div>
                             @endforeach
@@ -411,10 +416,11 @@ body {
                             <!--brands_products-->
                             <h2>Thương hiệu</h2>
                             <div class="brands-name">
-                            @foreach($brand as $key =>$bra)
+                                @foreach($brand as $key =>$bra)
                                 <ul class="nav nav-pills nav-stacked">
                                     <li>
-                                        <a href="{{URL::to('/thuong-hieu-san-pham/'.$bra->brand_id)}}"> <span class="pull-right">(50)</span>{{$bra->brand_name}}</a>
+                                        <a href="{{URL::to('/thuong-hieu-san-pham/'.$bra->brand_id)}}"> <span
+                                                class="pull-right">(50)</span>{{$bra->brand_name}}</a>
                                     </li>
                                 </ul>
                                 @endforeach
@@ -616,7 +622,9 @@ body {
     <script src="{{asset('public/frontend/js/price-range.js')}}"></script>
     <script src="{{asset('public/frontend/js/jquery.prettyPhoto.js')}}"></script>
     <script src="{{asset('public/frontend/js/main.js')}}"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"
+        integrity="sha512-3j3VU6WC5rPQB4Ld1jnLV7Kd5xr+cq9avvhwqzbH/taCRNURoeEpoPBK9pDyeukwSxwRPJ8fDgvYXd6SkaZ2TA=="
+        crossorigin="anonymous"></script>
     {{-- map js --}}
 
     <script src="https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js" charset="utf-8"></script>
@@ -631,26 +639,92 @@ body {
         href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.2.0/mapbox-gl-geocoder.css"
         type="text/css" />
     <script>
+    var urlH = 'http://localhost:8080/shopbanmoto';
 
-   
     // document.getElementById("language-active").addEventListener("click", function(event) {
     //     event.preventDefault()
-    // });
+    // })
+
     $(function() {
+        var scroll = $.cookie('scroll');
+        if (scroll) {
+            $('html,body').animate({
+                scrollTop: scroll
+            }, 0.1);
+            $.removeCookie('scroll');
+        }
+
+        $('.cart_quantity').click(function(e) {
+            $.cookie('scroll', window.pageYOffset);
+        })
+
+        // fix loi ajax call 419 (unknown status)
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+
         $('#language-active').click(function(event) {
             console.log("da vao");
             $('#optionLanguage').toggleClass('openOptionLanguage');
         });
-        $('#open-modal-zalo').click(function(event){
-            newwindown = window.open('https://zalo.me/0382978706','_blank');
-        })
-        
-        $('#open-modal-messeger').click(function(event){
-            newwindown = window.open('https://www.facebook.com/messages/t/102527788259135','_blank');
+        $('#open-modal-zalo').click(function(event) {
+            newwindown = window.open('https://zalo.me/0382978706', '_blank');
         })
 
+        $('#open-modal-messeger').click(function(event) {
+            newwindown = window.open('https://www.facebook.com/messages/t/102527788259135', '_blank');
+        })
+
+        $('.cart_quantity_input').on('keypress', function(e) {
+            var id = $(this).next().val();
+            console.log(e);
+            if (e.which === 13) {
+                console.log('oik');
+                $.ajax({
+                    url: urlH + '/update-cart',
+                    data: {
+                        'val': $(this).val(),
+                        'id': id
+                    },
+                    method: 'POST',
+                    success: function() {
+                        $.cookie('scroll', window.pageYOffset);
+                        $(location).attr('href', urlH + '/show-cart');
+                        console.log($(location));
+                    },
+                    error: function() {
+                        alert('error');
+                    }
+
+                })
+                console.log('oik');
+            }
+        });
+        $('.cart_quantity_input').focusout(function() {
+            var id = $(this).next().val();
+            $.ajax({
+                url: urlH + '/update-cart',
+                data: {
+                    'val': $(this).val(),
+                    'id': id
+                },
+                method: 'POST',
+                success: function() {
+                    $.cookie('scroll', window.pageYOffset);
+                    $(location).attr('href', urlH + '/show-cart');
+                },
+                error: function() {
+                    alert('error');
+                }
+
+            })
+        })
     })
     </script>
     <script src="{{asset('public/frontend/js/MapBox.js')}}"></script>
 </body>
+
 </html>
