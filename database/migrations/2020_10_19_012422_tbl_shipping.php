@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTblInventoryReceivingDetailVoucher extends Migration
+class TblShipping extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,12 @@ class CreateTblInventoryReceivingDetailVoucher extends Migration
      */
     public function up()
     {
-        Schema::create('tbl_inventory_receiving_detail_voucher', function (Blueprint $table) {
-            $table->int('rec_id');
-            $table->int('rec_date');
-            $table->text('rec_total_money');
+        Schema::create('tbl_shipping', function (Blueprint $table) {
+            $table->Increments('shipping_id');
+            $table->string('shipping_name');
+            $table->string('shipping_address');
+            $table->string('shipping_phone');
+            $table->string('shipping_email');
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ class CreateTblInventoryReceivingDetailVoucher extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tbl_inventory_receiving_detail_voucher');
+        Schema::dropIfExists('tbl_shipping');
     }
 }
