@@ -33,8 +33,8 @@ class HomeController extends Controller
         // ->join('tbl_brand','tbl_product.brand_id','=','tbl_brand.brand_id')
         // ->join('tbl_category_product','tbl_product.category_id','=','tbl_category_product.category_id')
         // ->get();
-        $all_product =  DB::table('tbl_product')->where('product_status','1')->orderby('brand_id','desc')->limit(6)->get();
-    	return view('pages.product.search')->with('category', $cate_product)->with('brand', $brand_product)->with('all_product', $all_product);
+        $search_product =  DB::table('tbl_product')->where('product_name','like','%'.$keyword.'%')->get();
+    	return view('pages.product.search')->with('category', $cate_product)->with('brand', $brand_product)->with('search_product', $search_product);
  
     }
 

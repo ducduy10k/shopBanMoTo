@@ -55,7 +55,51 @@ class CheckoutController extends Controller
     }
 
     public function payment(){
+        $cate_product = DB::table('tbl_category_product')->where('category_status','1')->orderby('category_id','desc')->get();
+        $brand_product = DB::table('tbl_brand')->where('brand_status','1')->orderby('brand_id','desc')->get();
+    	return view('pages.checkout.payment')->with('category', $cate_product)->with('brand', $brand_product);
+     
+    }
 
+    public function order_place(Request $request){
+        //payment
+        $data = array();
+        $data['payment_method'] = $request->payment_option;
+        $data['payment_status'] = 'Đang chờ';
+        $payment_id = DB::table('tbl_payment')->insertGetId($data);
+        // order
+        $order_data = array();
+        $customer_id =Session::get('customer_id');
+        $shipping_id =Session::get('shipping_id');
+        $order_data['customer_id'] = Session::get('customer_id');
+        $order_data['shipping_id'] = Session::get('shipping_id');
+        $order_data['payment_id'] = $payment_id;
+        $order_data['order_total'] = Cart::total();
+        $order_data['order_status'] = "Đang chờ xử lý";
+        $order_id = DB::table('tbl_order')->insertGetId($order_data);
+        // order detail
+        $content = Cart::content();
+        foreach($content as $item){
+            $order_d_data = array();
+            $order_d_data['order_id'] = $order_id;
+            $order_d_data['product_id'] =  $item->id;
+            $order_d_data['product_name'] = $item->name;
+            $order_d_data['order_quantity'] = $item->qty;
+            $order_d_data['order_price'] = $item->price;
+            DB::table('tbl_order_detail')->insert($order_d_data);
+        }
+       // echo print_r($content);
+        if($data['payment_method']==1){
+
+        }elseif($data['payment_method']==2){
+            Cart::destroy();
+            return view('pages.checkout.payment_on_dilivery');
+        }
+        else{
+
+        }
+        
+        return Redirect::to('/payment');
     }
 
     public function logout_checkout(){

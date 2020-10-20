@@ -96,6 +96,9 @@ Route::get('/checkout', 'CheckoutController@checkout');
 Route::post('/save-checkout-customer', 'CheckoutController@save_checkout_customer');
 Route::get('/logout-checkout', 'CheckoutController@logout_checkout');
 Route::post('/login-customer', 'CheckoutController@login_customer');
+Route::get('/payment', 'CheckoutController@payment');
+Route::post('/order-place', 'CheckoutController@order_place');
+
 
 
 
