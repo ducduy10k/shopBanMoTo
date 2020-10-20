@@ -65,13 +65,13 @@
 
             <div class="payment-options" style="margin-bottom:0;">
                 <span>
-                    <label><input name="payment_option" value="1" type="checkbox"> ATM</label>
+                    <label><input name="payment_option" value="1" type="radio"> ATM</label>
                 </span>
                 <span>
-                    <label><input name="payment_option" value="2" type="checkbox"> Thanh toán sau khi nhận hàng</label>
+                    <label><input name="payment_option" value="2" type="radio"> Thanh toán sau khi nhận hàng</label>
                 </span>
                 <span>
-                    <label><input name="payment_option" value="3" type="checkbox"> Thanh toán qua thẻ ghi nợ</label>
+                    <label><input name="payment_option" value="3" type="radio"> Thanh toán qua thẻ ghi nợ</label>
                 </span>
             </div>
             <input type="submit" value="Thanh toán" name="send_order_place" class="btn btn-primary btn-sm">

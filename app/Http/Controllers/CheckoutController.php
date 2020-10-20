@@ -62,6 +62,9 @@ class CheckoutController extends Controller
     }
 
     public function order_place(Request $request){
+        $cate_product = DB::table('tbl_category_product')->where('category_status','1')->orderby('category_id','desc')->get();
+        $brand_product = DB::table('tbl_brand')->where('brand_status','1')->orderby('brand_id','desc')->get();
+     
         //payment
         $data = array();
         $data['payment_method'] = $request->payment_option;
@@ -93,7 +96,7 @@ class CheckoutController extends Controller
 
         }elseif($data['payment_method']==2){
             Cart::destroy();
-            return view('pages.checkout.payment_on_dilivery');
+            return view('pages.checkout.payment_on_delivery')->with('category', $cate_product)->with('brand', $brand_product);
         }
         else{
 

@@ -5,9 +5,24 @@
     <meta charset="utf-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>Shop bán xe Moto Laravel</title>
+    <meta name="author" content="Nguyễn Đức Duy ">
+    <meta name="robots" content="INDEX,FOLLOW" />
+    <meta name="description" content="Chuyên bán moto giá tốt nhất Việt Nam">
+    <meta name="keywords" content="" />
+    <meta name="robots" content="INDEX,FOLLOW" />
+    <link rel="canonical" href="" />
+    <link rel="icon" type="image/x-icon" href="{{asset('public/frontend/images/home/motorcycle.png')}}" />
+
+    {{--<meta property="og:image" content="{{$image_og}}" />  --}}
+  
+    <meta property="og:site_name" content="http://localhost:8080/shopbanmoto/" />
+    <meta property="og:description" content="Chuyên bán moto giá tốt nhất Việt Nam" />
+    <meta property="og:title" content="Shop mô tô'" />
+    <meta property="og:url" content="" />
+    <meta property="og:type" content="website" />
+
+
+    <title>Shop bán xe Moto </title>
 
     <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
     <link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
@@ -89,7 +104,13 @@ body {
                                         </a>
                                     </div>
                                 </li>
-                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                <li>
+                                    <div class="fb-share-button" data-href="http://localhost:8080/shopbanmoto/"
+                                        data-layout="button_count" data-size="small"><a target="_blank"
+                                            href="https://www.facebook.com/sharer/sharer.php?u={{'http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']}}&amp;src=sdkpreparse"><i
+                                                class="fa fa-facebook"></i></a></div>
+                                </li>
+
                                 <li><a href="#"><i class="fa fa-twitter"></i></a></li>
                                 <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
                                 <li><a href="#"><i class="fa fa-dribbble"></i></a></li>
@@ -131,7 +152,7 @@ body {
                                 <?php
                                     }elseif($customer_id!=NULL && $shipping_id!=NULL){
                                 ?>
-                                
+
                                 <li><a href="{{URL::to('/payment')}}"><i class="fa fa-crosshairs"></i> Thanh
                                         toán</a>
                                 </li>
@@ -768,6 +789,11 @@ body {
     })
     </script>
     <script src="{{asset('public/frontend/js/MapBox.js')}}"></script>
+    <div id="fb-root"></div>
+    <!-- Shase facebook -->
+    <script async defer crossorigin="anonymous"
+        src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v8.0&appId=309062063469898&autoLogAppEvents=1"
+        nonce="Q3owmaXK"></script>
 </body>
 
 </html>

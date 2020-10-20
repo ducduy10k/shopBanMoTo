@@ -1,5 +1,6 @@
 @extends('layout')
 @section('content')
+
 @foreach($detail_product as $key =>$deltail_pro)
 <div class="product-details">
     <!--product-details-->
@@ -116,6 +117,7 @@
 
     </div>
 </div>
+<div class="fb-comments" data-href="http://localhost:8080/shopbanmoto/chi-tiet-san-pham/" data-numposts="20" data-width=""></div>
 <!--/category-tab-->
 @endforeach
 <div class="recommended_items">
@@ -153,4 +155,5 @@
     </div>
 </div>
 <!--/recommended_items-->
+
 @endsection
