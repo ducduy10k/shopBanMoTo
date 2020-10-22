@@ -13,8 +13,8 @@
     <link rel="canonical" href="" />
     <link rel="icon" type="image/x-icon" href="{{asset('public/frontend/images/home/motorcycle.png')}}" />
 
-    {{--<meta property="og:image" content="{{$image_og}}" />  --}}
-  
+    {{--<meta property="og:image" content="{{$image_og}}" /> --}}
+
     <meta property="og:site_name" content="http://localhost:8080/shopbanmoto/" />
     <meta property="og:description" content="Chuyên bán moto giá tốt nhất Việt Nam" />
     <meta property="og:title" content="Shop mô tô'" />
@@ -300,8 +300,13 @@ body {
                     <option value="">TP Hồ Chí Minh</option>
                 </select>
             </div>
-            <div>
-
+            <div id='vehicles-option'>
+                <select name="vehicles-obj" id="vehicles-obj">
+                    <option value=""><i class="fas fa-walking"></i></option>
+                    <option value=""><i class="fas fa-motorcycle"></i></option>
+                    <option value=""><i class="fas fa-truck-moving"></i></option>
+                    <option value=""><i class="fas fa-bicycle"></i></option>
+                </select>
             </div>
             <!-- Instruction -->
             <div style="display: none;" id="instructions">hello</div>
@@ -717,6 +722,7 @@ body {
             }, 0.1);
             $.removeCookie('scroll');
         }
+        
 
         $('.cart_quantity').click(function(e) {
             $.cookie('scroll', window.pageYOffset);
@@ -794,6 +800,51 @@ body {
     <script async defer crossorigin="anonymous"
         src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v8.0&appId=309062063469898&autoLogAppEvents=1"
         nonce="Q3owmaXK"></script>
+
+    <!-- Login facebook -->
+    <script>
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId: '309062063469898',
+            cookie: true,
+            xfbml: true,
+            version: '9a983b41ce5d3e108353b4d19b949d11'
+        });
+
+        FB.AppEvents.logPageView();
+
+    };
+
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {
+            return;
+        }
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    function checkLoginState() {
+        FB.getLoginStatus(function(response) {
+            if (response.status == "connected") {
+               console.log(response)
+                $.ajax({
+                    url: urlH + '/login-facebook/' + response.authResponse.userID,
+                    method: 'GET',
+                    success: function() {
+                      //  $(location).attr('href', urlH + '');
+                    },
+                    error: function() {
+                        alert('error');
+                    }
+                })
+            }
+            statusChangeCallback(response);
+        });
+    }
+    </script>
 </body>
 
 </html>

@@ -71,7 +71,7 @@
         </tbody>
 
     </table>
-   {{ $all_product->links() }}
+   {{ $all_product->render() }}
 
 </div>
 @endsection

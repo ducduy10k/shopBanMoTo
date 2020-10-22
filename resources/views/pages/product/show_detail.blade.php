@@ -117,7 +117,7 @@
 
     </div>
 </div>
-<div class="fb-comments" data-href="http://localhost:8080/shopbanmoto/chi-tiet-san-pham/" data-numposts="20" data-width=""></div>
+<div class="fb-comments" data-href="http://localhost:8080/shopbanmoto/chi-tiet-san-pham/{{$deltail_pro->product_id}}" data-numposts="20" data-width=""></div>
 <!--/category-tab-->
 @endforeach
 <div class="recommended_items">

@@ -16,7 +16,7 @@
                     <?php
                 }else{
                     ?>
-                    <img src="{{URL::to('public/frontend/images/product-detail/null.jpg')}}" style="width:100%;height:200px;" alt="" />
+                    <img src="{{URL::to('public/frontend/images/product-details/null.jpg')}}" style="width:100%;height:200px;" alt="" />
                     <?php 
                 }
 

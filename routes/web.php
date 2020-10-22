@@ -106,4 +106,8 @@ Route::post('/order-place', 'CheckoutController@order_place');
 Route::get('printer', 'HomeController@printer');
 Route::get('iframe_printer', 'HomeController@iframe_printer');
 Route::get('login_injection', 'HomeController@login_injection');
+Route::get('/send-mail', 'HomeController@send_mail');
+Route::get('/login-facebook/{rowId}', 'CheckoutController@login_facebook');
+
+
 

@@ -12,7 +12,19 @@
 
                 <div class="single-products">
                     <div class="productinfo text-center">
-                        <img src="{{URL::to('public/upload/product/'.$pro->product_image)}}" height='200' alt="" />
+                    <?php
+                if($pro->product_image !=''){
+                ?>
+                    <img src="{{URL::to('public/upload/product/'.$pro->product_image)}}" height='200' alt="" />
+                    <?php
+                }else{
+                    ?>
+                    <img src="{{URL::to('public/frontend/images/product-details/null.jpg')}}" style="width:100%;height:200px;" alt="" />
+                    <?php 
+                }
+
+                    ?>
+                        
                         <h2>{{number_format($pro->product_price).' VND'}} </h2>
                         <p>{{$pro->product_name}}</p>
                         <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to
@@ -31,6 +43,7 @@
         </div>
     </a>
     @endforeach
+    {{ $category_by_id->render() }}
 </div>
 <!--features_items-->
 

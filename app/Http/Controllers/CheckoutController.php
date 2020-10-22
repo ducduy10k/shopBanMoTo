@@ -16,8 +16,7 @@ class CheckoutController extends Controller
 
         $cate_product = DB::table('tbl_category_product')->where('category_status','1')->orderby('category_id','desc')->get();
         $brand_product = DB::table('tbl_brand')->where('brand_status','1')->orderby('brand_id','desc')->get();
-        $all_product =  DB::table('tbl_product')->where('product_status','1')->orderby('brand_id','desc')->limit(6)->get();
-    	return view('pages.checkout.login_checkout')->with('category', $cate_product)->with('brand', $brand_product)->with('all_product', $all_product);
+    	return view('pages.checkout.login_checkout')->with('category', $cate_product)->with('brand', $brand_product);
         
     }
 
@@ -37,8 +36,7 @@ class CheckoutController extends Controller
     public function checkout(){
         $cate_product = DB::table('tbl_category_product')->where('category_status','1')->orderby('category_id','desc')->get();
         $brand_product = DB::table('tbl_brand')->where('brand_status','1')->orderby('brand_id','desc')->get();
-        $all_product =  DB::table('tbl_product')->where('product_status','1')->orderby('brand_id','desc')->limit(6)->get();
-    	return view('pages.checkout.checkout')->with('category', $cate_product)->with('brand', $brand_product)->with('all_product', $all_product);
+    	return view('pages.checkout.checkout')->with('category', $cate_product)->with('brand', $brand_product);
         
     }
 
@@ -127,5 +125,9 @@ class CheckoutController extends Controller
 
    
        
+    }
+
+    public function login_facebook($id){
+        Session::put('customer_id',$id);
     }
 }
