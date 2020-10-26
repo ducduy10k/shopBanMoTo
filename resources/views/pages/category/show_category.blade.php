@@ -27,8 +27,15 @@
                         
                         <h2>{{number_format($pro->product_price).' VND'}} </h2>
                         <p>{{$pro->product_name}}</p>
-                        <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to
-                            cart</a>
+                        <form action="{{URL::to('/save-cart')}}" method="post">
+                        <input name='productid_hidden' type="hidden" value="{{$pro->product_id}}" />
+                        <input name='qty' type="hidden" min='1' value="1" />
+                            {{ csrf_field() }}
+                            <button type="submit" class="btn btn-fefault cart">
+                                <i class="fa fa-shopping-cart"></i>
+                                Thêm vào giỏ hàng
+                            </button>
+                        </form>
                     </div>
                 </div>
 

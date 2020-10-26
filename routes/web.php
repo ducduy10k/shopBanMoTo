@@ -61,6 +61,9 @@ Route::get('/delete-product/{product_id}', 'ProductController@delete_product');
 Route::post('save-product', 'ProductController@save_product');
 Route::post('update-product/{product_id}', 'ProductController@update_product');
 
+// Coupon
+Route::post('check-coupon', 'CartController@check_coupon');
+
 // Feature
 Route::get('add-feature', 'FeatureController@add_feature');
 Route::get('all-feature', 'FeatureController@all_feature');
@@ -107,7 +110,14 @@ Route::get('printer', 'HomeController@printer');
 Route::get('iframe_printer', 'HomeController@iframe_printer');
 Route::get('login_injection', 'HomeController@login_injection');
 Route::get('/send-mail', 'HomeController@send_mail');
-Route::get('/login-facebook/{rowId}', 'CheckoutController@login_facebook');
+Route::get('/login-facebook-home/{rowId}', 'CheckoutController@login_facebook');// home
 
+//Login facebook
+Route::get('/login-facebook','AdminController@login_facebook');
+Route::get('/admin/callback','AdminController@callback_facebook');
+
+//Login  google
+Route::get('/login-google','AdminController@login_google');
+Route::get('/google/callback','AdminController@callback_google');
 
 

@@ -5,6 +5,7 @@ use DB;
 use Cart;
 use Session ;
 use App\Http\Requests;
+use App\coupon;
 use Illuminate\Support\Facades\Redirect;
 session_start();
 class CartController extends Controller
@@ -27,6 +28,7 @@ class CartController extends Controller
        }
 
      public function show_cart($scrollY=0){
+      
           $cate_product = DB::table('tbl_category_product')->where('category_status','1')->orderby('category_id','desc')->get();
            $brand_product = DB::table('tbl_brand')->where('brand_status','1')->orderby('brand_id','desc')->get();
           return view('pages.cart.show_cart')->with('category', $cate_product)->with('brand', $brand_product);
@@ -52,5 +54,42 @@ class CartController extends Controller
       Cart::update($request->id, $request->val);
       //return Redirect::to('/show-cart');
      }
+
+     public function check_coupon(Request $request){
+      $data = $request->all();
+      $coupon = coupon::where('coupon_code',$data['coupon'])->first();
+      if($coupon){
+        $count_coupon = $coupon->count();
+        if($count_coupon>0){
+          $coupon_session = Session::get('coupon');
+          if($coupon_session==true){
+            $is_availabe = 0;
+            if($is_availabe  == 0){
+              $cou[] = array(
+                'coupon_code'=>$coupon->coupon_code,
+                'coupon_condition'=>$coupon->coupon_condition,
+                'coupon_number'=>$coupon->coupon_number,
+
+              );
+              Session::put('coupon',$cou);
+            }
+          }
+          else{
+            $cou[] = array(
+              'coupon_code'=>$coupon->coupon_code,
+              'coupon_condition'=>$coupon->coupon_condition,
+              'coupon_number'=>$coupon->coupon_number,
+
+            );
+            Session::put('coupon',$cou);
+          }
+          Session::save();
+          return redirect()->back()->with('message','Thêm mã thành công');
+        }
+      }else{
+        Session::forget('coupon');
+        return redirect()->back()->with('error','Mã  giảm giá không đúng');
+      }
+    }
   
 }

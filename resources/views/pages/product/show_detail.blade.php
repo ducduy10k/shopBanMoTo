@@ -53,7 +53,7 @@
                 <span>
                     <span>{{number_format($deltail_pro->product_price)}} VND</span>
                     <label>Số lượng:</label>
-                    <input name='qty' type="number" min='1' value="3" />
+                    <input name='qty' type="number" min='1' value="1" />
                     <input name='productid_hidden' type="hidden" value="{{$deltail_pro->product_id}}" />
 
                     <button type="submit" class="btn btn-fefault cart">

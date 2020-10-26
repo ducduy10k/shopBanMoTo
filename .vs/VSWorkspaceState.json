@@ -1,7 +1,6 @@
 {
   "ExpandedNodes": [
     "",
-    "\\app",
     "\\app\\Http",
     "\\app\\Http\\Controllers",
     "\\resources",
@@ -12,6 +11,6 @@
     "\\resources\\views\\pages\\product",
     "\\routes"
   ],
-  "SelectedNode": "\\app\\Http\\Controllers\\CartController.php",
+  "SelectedNode": "\\resources\\views\\pages\\send_mail.blade.php",
   "PreviewInSolutionExplorer": false
 }

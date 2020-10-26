@@ -300,13 +300,11 @@ body {
                     <option value="">TP Hồ Chí Minh</option>
                 </select>
             </div>
-            <div id='vehicles-option'>
-                <select name="vehicles-obj" id="vehicles-obj">
-                    <option value=""><i class="fas fa-walking"></i></option>
-                    <option value=""><i class="fas fa-motorcycle"></i></option>
-                    <option value=""><i class="fas fa-truck-moving"></i></option>
-                    <option value=""><i class="fas fa-bicycle"></i></option>
-                </select>
+            <div id="vehicles-option" >
+                    <i class="fas fa-walking"></i>
+                   <i class="fas fa-motorcycle"></i>
+                    <i class="fas fa-truck-moving"></i>
+                    <i class="fas fa-bicycle"></i>
             </div>
             <!-- Instruction -->
             <div style="display: none;" id="instructions">hello</div>
@@ -715,6 +713,7 @@ body {
     // })
 
     $(function() {
+        console.log('ok')
         var scroll = $.cookie('scroll');
         if (scroll) {
             $('html,body').animate({
@@ -722,7 +721,11 @@ body {
             }, 0.1);
             $.removeCookie('scroll');
         }
-        
+
+
+        $('#check-coupon').click(function(e) {
+            $.cookie('scroll', window.pageYOffset);
+        })
 
         $('.cart_quantity').click(function(e) {
             $.cookie('scroll', window.pageYOffset);
@@ -829,12 +832,12 @@ body {
     function checkLoginState() {
         FB.getLoginStatus(function(response) {
             if (response.status == "connected") {
-               console.log(response)
+                console.log(response)
                 $.ajax({
-                    url: urlH + '/login-facebook/' + response.authResponse.userID,
+                    url: urlH + '/login-facebook-home/' + response.authResponse.userID,
                     method: 'GET',
                     success: function() {
-                      //  $(location).attr('href', urlH + '');
+                        //  $(location).attr('href', urlH + '');
                     },
                     error: function() {
                         alert('error');
