@@ -59,6 +59,13 @@ body {
 .openOptionLanguage {
     display: block !important;
 }
+
+
+
+.active{
+    background-color:yellow;
+}
+
 </style>
 <!--/head-->
 
@@ -301,10 +308,17 @@ body {
                 </select>
             </div>
             <div id="vehicles-option" >
-                    <i class="fas fa-walking"></i>
-                   <i class="fas fa-motorcycle"></i>
-                    <i class="fas fa-truck-moving"></i>
-                    <i class="fas fa-bicycle"></i>
+                   <div class='vehicles-item'>
+                       <i class="fas fa-walking"></i></div> 
+                   <div class='vehicles-item'>
+                       <i class="fas fa-motorcycle"></i>
+                   </div>
+                   <div class='vehicles-item'>
+                        <i class="fas fa-truck-moving"></i>
+                   </div>
+                   <div class='vehicles-item'>
+                        <i class="fas fa-bicycle"></i>
+                   </div>
             </div>
             <!-- Instruction -->
             <div style="display: none;" id="instructions">hello</div>
@@ -795,6 +809,13 @@ body {
 
             })
         })
+
+        $('.vehicles-item').click(function(){
+            $(this).addClass(active);
+        })
+
+
+
     })
     </script>
     <script src="{{asset('public/frontend/js/MapBox.js')}}"></script>

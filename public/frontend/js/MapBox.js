@@ -5,6 +5,7 @@ var arrs = [{
     lat: 21.04349121680354
 }];
 var isDrive = false;
+var vehicles = 'walking';
 var content = '';
 var data = {
     "type": "FeatureCollection",
@@ -231,13 +232,17 @@ var canvas = map.getCanvasContainer();
 var start = [105.797527, 21.029750];
 // this is where the code for the next step will go
 
-function getRoute(end) {
+function getRoute(end, vehicles, start = true) {
     // make a directions request using cycling profile
     // an arbitrary start will always be the same
     // only the end or destination will change
     var start = [105.803931, 21.028659];
     //mapbox/driving-traffic, mapbox/driving, mapbox/walking, và mapbox/cycling
-    var url = 'https://api.mapbox.com/directions/v5/mapbox/walking/' + end[0] + ',' + end[1] + ';' + start[0] + ',' + start[1] + '?steps=true&geometries=geojson&access_token=' + mapboxgl.accessToken;
+    if (start) {
+        var url = 'https://api.mapbox.com/directions/v5/mapbox/' + vehicles + '/' + end[0] + ',' + end[1] + ';' + start[0] + ',' + start[1] + '?steps=true&geometries=geojson&access_token=' + mapboxgl.accessToken;
+    } else {
+        var url = 'https://api.mapbox.com/directions/v5/mapbox/' + vehicles + '/' + start[0] + ',' + start[1] + ';' + end[0] + ',' + end[1] + '?steps=true&geometries=geojson&access_token=' + mapboxgl.accessToken;
+    }
     // make an XHR request https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
     var req = new XMLHttpRequest();
     req.open('GET', url, true);
@@ -299,7 +304,7 @@ function getRoute(end) {
 map.on('load', function() {
     // make an initial directions request that
     // starts and ends at the same location
-    getRoute(start);
+    getRoute(start, vehicles);
     // Add starting point to the map
     map.addLayer({
         id: 'point',
@@ -417,7 +422,7 @@ map.on('load', function() {
                 }
             });
         }
-        getRoute(coords);
+        getRoute(coords, vehicles);
     })
 
 
@@ -447,7 +452,7 @@ map.on('load', function() {
         map.getSource('single-point').setData(e.result.geometry);
         //console.log(e);
         //console.log(e.result.geometry.coordinates);
-        getRoute(e.result.geometry.coordinates);
+        getRoute(e.result.geometry.coordinates, vehicles);
     });
 });
 
@@ -602,10 +607,14 @@ $(function() {
         $(this).toggleClass('backgroundyellow');
     });
 
-
     $('#openMap').click(function(event) {
         /* Act on the event */
         $('#map-infor').css("transform", "translateX(-40px)");
     });
+
+    $('.vehicles-item').click(function() {
+        $(this).addClass('active');
+        vehicles = $(this).val();
+    })
 
 });
