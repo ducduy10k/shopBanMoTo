@@ -71,8 +71,6 @@
                                 {{ csrf_field() }}
                                 @if(Session::get('coupon'))
                                         @foreach(Session::get('coupon') as $key =>$cou)
-                                        
-
                                 <input type="text" class="form-control" value="{{$cou['coupon_code']}}"  name="coupon" placeholder="Nhập mã giảm giá">
                                 @endforeach
                                 @else

@@ -16,7 +16,9 @@ class CheckoutController extends Controller
 
         $cate_product = DB::table('tbl_category_product')->where('category_status','1')->orderby('category_id','desc')->get();
         $brand_product = DB::table('tbl_brand')->where('brand_status','1')->orderby('brand_id','desc')->get();
-    	return view('pages.checkout.login_checkout')->with('category', $cate_product)->with('brand', $brand_product);
+        $slide_product = DB::table('tbl_slide_home')->where('slide_status','1')->orderby('slide_id','desc')->get();
+
+    	return view('pages.checkout.login_checkout')->with('category', $cate_product)->with('brand', $brand_product)->with('all_slide',$slide_product);
         
     }
 
@@ -36,8 +38,10 @@ class CheckoutController extends Controller
     public function checkout(){
         $cate_product = DB::table('tbl_category_product')->where('category_status','1')->orderby('category_id','desc')->get();
         $brand_product = DB::table('tbl_brand')->where('brand_status','1')->orderby('brand_id','desc')->get();
-    	return view('pages.checkout.checkout')->with('category', $cate_product)->with('brand', $brand_product);
-        
+        $slide_product = DB::table('tbl_slide_home')->where('slide_status','1')->orderby('slide_id','desc')->get();
+
+        return view('pages.checkout.checkout')->with('category', $cate_product)->with('brand', $brand_product)
+        ->with('all_slide',$slide_product);
     }
 
     public function save_checkout_customer(Request $request){
@@ -55,13 +59,16 @@ class CheckoutController extends Controller
     public function payment(){
         $cate_product = DB::table('tbl_category_product')->where('category_status','1')->orderby('category_id','desc')->get();
         $brand_product = DB::table('tbl_brand')->where('brand_status','1')->orderby('brand_id','desc')->get();
-    	return view('pages.checkout.payment')->with('category', $cate_product)->with('brand', $brand_product);
+        $slide_product = DB::table('tbl_slide_home')->where('slide_status','1')->orderby('slide_id','desc')->get();
+        
+    	return view('pages.checkout.payment')->with('category', $cate_product)->with('brand', $brand_product)->with('all_slide',$slide_product);
      
     }
 
     public function order_place(Request $request){
         $cate_product = DB::table('tbl_category_product')->where('category_status','1')->orderby('category_id','desc')->get();
         $brand_product = DB::table('tbl_brand')->where('brand_status','1')->orderby('brand_id','desc')->get();
+        $slide_product = DB::table('tbl_slide_home')->where('slide_status','1')->orderby('slide_id','desc')->get();
      
         //payment
         $data = array();
@@ -94,7 +101,9 @@ class CheckoutController extends Controller
 
         }elseif($data['payment_method']==2){
             Cart::destroy();
-            return view('pages.checkout.payment_on_delivery')->with('category', $cate_product)->with('brand', $brand_product);
+            return view('pages.checkout.payment_on_delivery')->with('category', $cate_product)->with('brand', $brand_product)
+        ->with('all_slide',$slide_product)
+        ;
         }
         else{
 

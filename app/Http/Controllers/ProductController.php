@@ -110,6 +110,8 @@ class ProductController extends Controller
     public function detail_product($product_id){
         $cate_product = DB::table('tbl_category_product')->where('category_status','1')->orderby('category_id','desc')->get();
         $brand_product = DB::table('tbl_brand')->where('brand_status','1')->orderby('brand_id','desc')->get();
+        $slide_product = DB::table('tbl_slide_home')->where('slide_status','1')->orderby('slide_id','desc')->get();
+
         $detail_product =  DB::table('tbl_product')
         ->join('tbl_brand','tbl_product.brand_id','=','tbl_brand.brand_id')
         ->join('tbl_category_product','tbl_product.category_id','=','tbl_category_product.category_id')
@@ -129,6 +131,7 @@ class ProductController extends Controller
         ->whereNotIn('tbl_product.product_id',[$product_id])
         ->get();
         return view('pages.product.show_detail')->with('category', $cate_product)->with('brand', $brand_product)
+        ->with('all_slide',$slide_product)
         ->with('detail_product', $detail_product)->with('related_product', $related_product);
     }
 }

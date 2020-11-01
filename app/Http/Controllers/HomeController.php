@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use DB;
 use Mail;
 use Session ;
+use App\Rules\Captcha; 
+use Validator;  
 use App\Http\Requests;
 use Illuminate\Support\Facades\Redirect;
 session_start();
@@ -22,6 +24,8 @@ class HomeController extends Controller
         $meta_title = 'Shop mô tô';
         $url_canonical = $request->url();
         //end seo
+        
+        $slide_product = DB::table('tbl_slide_home')->where('slide_status','1')->orderby('slide_id','desc')->get();
         $cate_product = DB::table('tbl_category_product')->where('category_status','1')->orderby('category_id','desc')->get();
         $brand_product = DB::table('tbl_brand')->where('brand_status','1')->orderby('brand_id','desc')->get();
         // $all_product =  DB::table('tbl_product')
@@ -30,6 +34,7 @@ class HomeController extends Controller
         // ->get();
         $all_product =  DB::table('tbl_product')->where('product_status','1')->orderby('brand_id','desc')->limit(9)->get();
         return view('pages.home')->with('category', $cate_product)->with('brand', $brand_product)->with('all_product', $all_product)
+        ->with('all_slide',$slide_product)
         ->with('meta_desc',$meta_desc)->with('meta_keywords',$meta_keywords)->with('meta_title',$meta_title)->with('url_canonical',$url_canonical);
     }
 
@@ -37,12 +42,11 @@ class HomeController extends Controller
         $keyword = $request->keywords;
         $cate_product = DB::table('tbl_category_product')->where('category_status','1')->orderby('category_id','desc')->get();
         $brand_product = DB::table('tbl_brand')->where('brand_status','1')->orderby('brand_id','desc')->get();
-        // $all_product =  DB::table('tbl_product')
-        // ->join('tbl_brand','tbl_product.brand_id','=','tbl_brand.brand_id')
-        // ->join('tbl_category_product','tbl_product.category_id','=','tbl_category_product.category_id')
-        // ->get();
+        $slide_product = DB::table('tbl_slide_home')->where('slide_status','1')->orderby('slide_id','desc')->get();
+
         $search_product =  DB::table('tbl_product')->where('product_name','like','%'.$keyword.'%')->get();
-    	return view('pages.product.search')->with('category', $cate_product)->with('brand', $brand_product)->with('search_product', $search_product);
+        return view('pages.product.search')->with('category', $cate_product)->with('brand', $brand_product)
+        ->with('all_slide',$slide_product)->with('search_product', $search_product);
  
     }
 
@@ -75,5 +79,22 @@ class HomeController extends Controller
          });
 
 
+    }
+
+    public function send_message(Request $request){
+        $data = $request->validate([
+            'customer_phone' => 'required',
+            'content_message' => 'required',
+            'customer_name' => 'required',
+           'g-recaptcha-response' => new Captcha(), 		//dòng kiểm tra Captcha
+        ]);
+
+        $data  = array();
+        $data['customer_phone'] = $request->customer_phone;
+        $data['content_message'] = $request->content_message;
+        $data['customer_name'] = $request->customer_name;
+        DB::table('tbl_message_request')->insert($data);
+        Session::put('message','Đã gửi thành công');
+        return Redirect::to('/');
     }
 }

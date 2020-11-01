@@ -62,10 +62,17 @@ body {
 
 
 
-.active{
-    background-color:yellow;
+.active {
+    background-color: yellow;
 }
-
+.carousel-inner *{
+    color:white;
+}
+.g-recaptcha {
+    transform-origin: 0 0;
+    margin-left: 50%;
+    transform: translateX(-50%) scale(0.77);
+}
 </style>
 <!--/head-->
 
@@ -307,18 +314,19 @@ body {
                     <option value="">TP Hồ Chí Minh</option>
                 </select>
             </div>
-            <div id="vehicles-option" >
-                   <div class='vehicles-item'>
-                       <i class="fas fa-walking"></i></div> 
-                   <div class='vehicles-item'>
-                       <i class="fas fa-motorcycle"></i>
-                   </div>
-                   <div class='vehicles-item'>
-                        <i class="fas fa-truck-moving"></i>
-                   </div>
-                   <div class='vehicles-item'>
-                        <i class="fas fa-bicycle"></i>
-                   </div>
+            <div id="vehicles-option">
+                <div class='vehicles-item'>
+                    <i class="fas fa-walking"></i>
+                </div>
+                <div class='vehicles-item'>
+                    <i class="fas fa-motorcycle"></i>
+                </div>
+                <div class='vehicles-item'>
+                    <i class="fas fa-truck-moving"></i>
+                </div>
+                <div class='vehicles-item'>
+                    <i class="fas fa-bicycle"></i>
+                </div>
             </div>
             <!-- Instruction -->
             <div style="display: none;" id="instructions">hello</div>
@@ -328,34 +336,59 @@ body {
     {{-- end map location --}}
     <!-- Modal send message -->
 
-    <div class="modal fade" id="modalMessage" tabindex="-1" role="dialog" aria-labelledby="modalMessageLabel"
+    <div class="modal" id="modalMessage" tabindex="-1" role="dialog" aria-labelledby="modalMessageLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title" id="modalMessageLabel" style="text-align:center;">Gửi tin nhắn cho chúng tôi
-                    </h3>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                        style="margin-top:-18px;">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div>
-                        <p style="margin-top:5px;">&nbsp Phone number (*)</p>
-                        <input type="tel" placeholder='Enter your phone number ... ' class="form-control">
-                        <p style="margin-top:5px;">&nbsp Content (*)</p>
-                        <textarea id="content-message" placeholder='Leave a message for us .' class='form-control'
-                            name="content-message" rows="4" cols="50"></textarea>
-                        <p style="margin-top:5px;">&nbsp Your name </p>
-                        <input type="text" id='yourName' placeholder="Your name ..." class='form-control'>
-                    </div>
+                <form action="{{URL::to('/send-message')}}" method="POST">
+                    {{ csrf_field() }}
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" style="margin-top:0px;">Send</button>
-                </div>
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="modalMessageLabel" style="text-align:center;">Gửi tin nhắn cho chúng
+                            tôi
+                        </h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            style="margin-top:-18px;">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <?php
+			        $message = Session::get('message');
+			        if($message){
+				        echo '<span style="color:green;">'. $message.'</span>';
+				        Session::put('message',null);
+			            }
+			            ?>
+                        @foreach($errors->all() as $val)
+                        {{$val}}
+                        @endforeach
+                        <div>
+                            <p style="margin-top:5px;">&nbsp Phone number (*)</p>
+                            <input type="tel" name="customer_phone" placeholder='Enter your phone number ... '
+                                class="form-control">
+                            <p style="margin-top:5px;">&nbsp Content (*)</p>
+                            <textarea id="content-message" placeholder='Leave a message for us .' class='form-control'
+                                name="content_message" rows="4" cols="50"></textarea>
+                            <p style="margin-top:5px;">&nbsp Your name </p>
+                            <input type="text" id='yourName' name="customer_name" placeholder="Your name ..."
+                                class='form-control'>
+                        </div>
+                        <br>
+                        <div class="g-recaptcha" data-sitekey="{{env('CAPTCHA_KEY')}}"></div>
+                        <br />
+                        @if($errors->has('g-recaptcha-response'))
+                        <span class="invalid-feedback" style="display:block">
+                            <strong>{{$errors->first('g-recaptcha-response')}}</strong>
+                        </span>
+                        @endif
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" >Close</button>
+                        <button type="submit" class="btn btn-primary button-save" id="button-save-mess"
+                            style="margin-top:0px;">Send</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -398,6 +431,14 @@ body {
                         <h4>Liên hệ với chúng tôi qua Hotline :</h4>
                         <h2>038 297 8706</h2>
                     </div>
+                    <br>
+                    <div class="g-recaptcha" data-sitekey="{{env('CAPTCHA_KEY')}}"></div>
+                    <br />
+                    @if($errors->has('g-recaptcha-response-phone'))
+                    <span class="invalid-feedback" style="display:block">
+                        <strong>{{$errors->first('g-recaptcha-response-phone')}}</strong>
+                    </span>
+                    @endif
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -408,56 +449,62 @@ body {
     <!-- End modal phone  -->
     <section id="slider">
         <!--slider-->
+        
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
                     <div id="slider-carousel" class="carousel slide" data-ride="carousel">
+                   
                         <ol class="carousel-indicators">
-                            <li data-target="#slider-carousel" data-slide-to="0" class="active"></li>
-                            <li data-target="#slider-carousel" data-slide-to="1"></li>
-                            <li data-target="#slider-carousel" data-slide-to="2"></li>
+                        <?php
+                            $i = 0;
+
+                        ?>
+                             @foreach($all_slide as $key =>$slide)
+                             <?php
+                             
+                             if($i==1){
+                               echo '<li data-target="#slider-carousel" data-slide-to="'.$i.'" class="active"></li>';
+                             }
+                             else{
+                                echo '<li data-target="#slider-carousel" data-slide-to="'.$i.'" ></li>';
+                             }
+                             $i=$i+1;
+                             ?>
+                            @endforeach
                         </ol>
-
+                        
                         <div class="carousel-inner">
-                            <div class="item active">
-                                <div class="col-sm-6">
-                                    <h1><span>E</span>-SHOPPER</h1>
-                                    <h2>Free E-Commerce Template</h2>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                        incididunt ut labore et dolore magna aliqua. </p>
-                                    <button type="button" class="btn btn-default get">Get it now</button>
-                                </div>
-                                <div class="col-sm-6">
+                        <?php
+                            $i = 0;
 
+                        ?>
+                        @foreach($all_slide as $key =>$slide)
+                        <?php
+                         $i=$i+1;
+                         if($i==1){
+                             echo ' <div class="item active" style="position:relative;">';
+                         }else {
+                            echo ' <div class="item" style="position:relative;">';
+                         }
+                        ?>
+
+                           
+
+                                <div class="col-sm-6" style="z-index:10;color:white;height:450px">
+                                    <h1 style="color:#ffbf80">Shop Mô tô</h1>
+                                    <h2 style="color:#ffd9b3">{{$slide->slide_title}}</h2>
+                                    <p style="color:#fff2e6">{{$slide->slide_desc}} </p>
+                                   
+                                </div>
+                                <div style="position:absolute;width:85%;height:100%;z-index:1">
+                                    <img src="{{URL::to('public/upload/product/'.$slide->slide_image)}}" style="object-fit:cover;" class="girl img-responsive" alt="" />
+									<!-- <img src="images/home/pricing.png"  class="pricing" alt="" /> -->
                                 </div>
                             </div>
-                            <div class="item">
-                                <div class="col-sm-6">
-                                    <h1><span>E</span>-SHOPPER</h1>
-                                    <h2>100% Responsive Design</h2>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                        incididunt ut labore et dolore magna aliqua. </p>
-                                    <button type="button" class="btn btn-default get">Get it now</button>
-                                </div>
-                                <div class="col-sm-6">
-
-                                </div>
-                            </div>
-
-                            <div class="item">
-                                <div class="col-sm-6">
-                                    <h1><span>E</span>-SHOPPER</h1>
-                                    <h2>Free Ecommerce Template</h2>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                        incididunt ut labore et dolore magna aliqua. </p>
-                                    <button type="button" class="btn btn-default get">Get it now</button>
-                                </div>
-                                <div class="col-sm-6">
-                                </div>
-                            </div>
-
+                            @endforeach
                         </div>
-
+                        
                         <a href="#slider-carousel" class="left control-carousel hidden-xs" data-slide="prev">
                             <i class="fa fa-angle-left"></i>
                         </a>
@@ -469,6 +516,7 @@ body {
                 </div>
             </div>
         </div>
+       
     </section>
     <!--/slider-->
 
@@ -719,6 +767,11 @@ body {
     <link rel="stylesheet"
         href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.2.0/mapbox-gl-geocoder.css"
         type="text/css" />
+    <!-- Capcha -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+
+
     <script>
     var urlH = 'http://localhost:8080/shopbanmoto';
 
@@ -729,6 +782,8 @@ body {
     $(function() {
         console.log('ok')
         var scroll = $.cookie('scroll');
+        var modal = $.cookie('modal');
+
         if (scroll) {
             $('html,body').animate({
                 scrollTop: scroll
@@ -736,6 +791,10 @@ body {
             $.removeCookie('scroll');
         }
 
+        if (modal) {
+            $('#modalMessage').modal('show');
+            $.removeCookie('modal');
+        }
 
         $('#check-coupon').click(function(e) {
             $.cookie('scroll', window.pageYOffset);
@@ -752,6 +811,14 @@ body {
             }
         });
 
+
+        $('.button-save').click(function(event) {
+            $.cookie('scroll', window.pageYOffset);
+        })
+
+        $('#button-save-mess').click(function(event) {
+            $.cookie('modal', '#modalMessage');
+        })
 
         $('#language-active').click(function(event) {
             console.log("da vao");
@@ -809,13 +876,6 @@ body {
 
             })
         })
-
-        $('.vehicles-item').click(function(){
-            $(this).addClass(active);
-        })
-
-
-
     })
     </script>
     <script src="{{asset('public/frontend/js/MapBox.js')}}"></script>
@@ -869,6 +929,9 @@ body {
         });
     }
     </script>
+
+    <!-- <script src='https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js'></script> -->
+
 </body>
 
 </html>

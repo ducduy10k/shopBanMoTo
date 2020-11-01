@@ -613,6 +613,7 @@ $(function() {
     });
 
     $('.vehicles-item').click(function() {
+        $('.vehicles-item').removeClass('active');
         $(this).addClass('active');
         vehicles = $(this).val();
     })
