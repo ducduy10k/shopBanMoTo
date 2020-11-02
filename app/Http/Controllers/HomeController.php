@@ -24,7 +24,7 @@ class HomeController extends Controller
         $meta_title = 'Shop mô tô';
         $url_canonical = $request->url();
         //end seo
-        
+        $all_shop =DB::table('tbl_shop_info')->where('shop_status','1')->orderby('shop_id','asc')->get();
         $slide_product = DB::table('tbl_slide_home')->where('slide_status','1')->orderby('slide_id','desc')->get();
         $cate_product = DB::table('tbl_category_product')->where('category_status','1')->orderby('category_id','desc')->get();
         $brand_product = DB::table('tbl_brand')->where('brand_status','1')->orderby('brand_id','desc')->get();
@@ -35,7 +35,11 @@ class HomeController extends Controller
         $all_product =  DB::table('tbl_product')->where('product_status','1')->orderby('brand_id','desc')->limit(9)->get();
         return view('pages.home')->with('category', $cate_product)->with('brand', $brand_product)->with('all_product', $all_product)
         ->with('all_slide',$slide_product)
-        ->with('meta_desc',$meta_desc)->with('meta_keywords',$meta_keywords)->with('meta_title',$meta_title)->with('url_canonical',$url_canonical);
+        ->with('meta_desc',$meta_desc)
+        ->with('meta_keywords',$meta_keywords)
+        ->with('meta_title',$meta_title)
+        ->with('url_canonical',$url_canonical)
+        ->with('all_shop',$all_shop);
     }
 
     public function search(Request $request){
@@ -43,10 +47,17 @@ class HomeController extends Controller
         $cate_product = DB::table('tbl_category_product')->where('category_status','1')->orderby('category_id','desc')->get();
         $brand_product = DB::table('tbl_brand')->where('brand_status','1')->orderby('brand_id','desc')->get();
         $slide_product = DB::table('tbl_slide_home')->where('slide_status','1')->orderby('slide_id','desc')->get();
+        $all_shop =DB::table('tbl_shop_info')->where('shop_status','1')->orderby('shop_id','asc')->get();
 
         $search_product =  DB::table('tbl_product')->where('product_name','like','%'.$keyword.'%')->get();
-        return view('pages.product.search')->with('category', $cate_product)->with('brand', $brand_product)
-        ->with('all_slide',$slide_product)->with('search_product', $search_product);
+        return view('pages.product.search')
+        ->with('category', $cate_product)
+        ->with('brand', $brand_product)
+        ->with('all_slide',$slide_product)
+        ->with('search_product', $search_product)
+        ->with('all_shop',$all_shop);
+
+
  
     }
 
@@ -67,12 +78,8 @@ class HomeController extends Controller
        
          $to_name = "N Duy";
          $to_email = "ducduy10k@gmail.com";//send to this email
-        
-      
          $data = array("name"=>"Mail từ tài khoản Khách hàng","body"=>'Mail gửi về vấn về hàng hóa'); //body of mail.blade.php
-         
          Mail::send('pages.send_mail',$data,function($message) use ($to_name,$to_email){
-
              $message->to($to_email)->subject('Test thử gửi mail google');//send this mail with subject
              $message->from($to_email,$to_name);//send from this mail
 
@@ -96,5 +103,9 @@ class HomeController extends Controller
         DB::table('tbl_message_request')->insert($data);
         Session::put('message','Đã gửi thành công');
         return Redirect::to('/');
+    }
+
+    public function getLongLat($shop_id){
+        return 'xxxxxx';
     }
 }

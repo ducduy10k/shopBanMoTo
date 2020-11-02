@@ -1,39 +1,26 @@
-var arrs = [{
-    id: "VN",
-    national: "Việt 1",
-    lon: 105.908203,
-    lat: 21.04349121680354
-}];
+var arrs = [];
+var locationActive;
+var lonlatCurrent;
 var isDrive = false;
 var vehicles = 'walking';
 var content = '';
 var data = {
     "type": "FeatureCollection",
-    "features": [{
-        "type": "Feature",
-        "properties": {
-            'description': "Số nhà 17 , ngõ 445 Nguyễn Khang , Cầu Giấy , Hà Nội .",
-            'icon': 'theatre'
-        },
-        "geometry": {
-            "type": "Point",
-            "coordinates": [
-                105.797527, 21.029750
-            ]
-        }
-    }]
+    "features": []
 }
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYmV0YXBjaG9pMTBrIiwiYSI6ImNrY2ZuaWEwNjA2ZW0yeWw4bG9yNnUyYm0ifQ.bFCQ-5yq6cSsrhugfxO2_Q';
 var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/betapchoi10k/ckeez49fq1e0w19ntggfba9hs',
-    zoom: 2,
-
-    // interactive: false // tắt các điều khiển tương tác thêm bản đồ
+    zoom: 8,
+    center: [105.797527, 21.029750]
+        // interactive: false // tắt các điều khiển tương tác thêm bản đồ
 });
+
 var id, lon, lat, national;
-//Taon mới điểm 
+
+//Tao mới điểm 
 function newPoint() {
     id = document.getElementById('idNational').value;
     national = document.getElementById('national').value;
@@ -49,8 +36,8 @@ function newPoint() {
     content = '';
     for (var arr of arrs) {
         content += "<li onclick=flyToLocation('" + arr.id + "')>" + arr.national + "</li>";
-
     }
+
     data.features.push({
         'type': 'Feature',
         'geometry': {
@@ -58,7 +45,7 @@ function newPoint() {
             'coordinates': [lon, lat]
         },
         'properties': {
-            'text': arr.national,
+            'text': national,
             'description': description
         }
     });
@@ -224,24 +211,24 @@ var bounds = [
     [105.040945, 20.626792],
     [106.348476, 21.709620]
 ];
-map.setMaxBounds(bounds);
+//map.setMaxBounds(bounds);
 // initialize the map canvas to interact with later
 var canvas = map.getCanvasContainer();
 // an arbitrary start will always be the same
 // only the end or destination will change
-var start = [105.797527, 21.029750];
+//var start = [105.797527, 21.029750];
 // this is where the code for the next step will go
 
 function getRoute(end, vehicles, start = true) {
     // make a directions request using cycling profile
     // an arbitrary start will always be the same
     // only the end or destination will change
-    var start = [105.803931, 21.028659];
+    //var start = [105.803931, 21.028659];
     //mapbox/driving-traffic, mapbox/driving, mapbox/walking, và mapbox/cycling
     if (start) {
-        var url = 'https://api.mapbox.com/directions/v5/mapbox/' + vehicles + '/' + end[0] + ',' + end[1] + ';' + start[0] + ',' + start[1] + '?steps=true&geometries=geojson&access_token=' + mapboxgl.accessToken;
+        var url = 'https://api.mapbox.com/directions/v5/mapbox/' + vehicles + '/' + end[0] + ',' + end[1] + ';' + locationActive.lon + ',' + locationActive.lat + '?steps=true&geometries=geojson&language=vi&access_token=' + mapboxgl.accessToken;
     } else {
-        var url = 'https://api.mapbox.com/directions/v5/mapbox/' + vehicles + '/' + start[0] + ',' + start[1] + ';' + end[0] + ',' + end[1] + '?steps=true&geometries=geojson&access_token=' + mapboxgl.accessToken;
+        var url = 'https://api.mapbox.com/directions/v5/mapbox/' + vehicles + '/' + locationActive.lon + ',' + locationActive.lat + ';' + end[0] + ',' + end[1] + '?steps=true&geometries=geojson&language=vi&access_token=' + mapboxgl.accessToken;
     }
     // make an XHR request https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
     var req = new XMLHttpRequest();
@@ -294,7 +281,19 @@ function getRoute(end, vehicles, start = true) {
         var tripInstructions = [];
         for (var i = 0; i < steps.length; i++) {
             tripInstructions.push('<br><li>' + steps[i].maneuver.instruction) + '</li>';
-            instructions.innerHTML = '<br><span class="duration">Trip duration: ' + Math.floor(data.duration / 60) + ' min 🚴🚶 🚗 🚌 </span>' + tripInstructions;
+            var content = '';
+            content += '<br><span class="duration">Thời lượng chuyến đi: ' + Math.floor(data.duration / 60);
+            if (vehicles == 'walking') {
+                content += ' phút 🚶 </span>' + tripInstructions;
+            } else if (vehicles == 'cycling') {
+                content += ' phút 🚴 </span>' + tripInstructions;
+            } else if (vehicles == 'driving') {
+                content += ' phút 🚗 </span>' + tripInstructions;
+            } else {
+                content += ' phút 🚌 </span>' + tripInstructions;
+            }
+
+            instructions.innerHTML = content;
         }
 
     };
@@ -304,30 +303,30 @@ function getRoute(end, vehicles, start = true) {
 map.on('load', function() {
     // make an initial directions request that
     // starts and ends at the same location
-    getRoute(start, vehicles);
+    getRoute([locationActive.lon, locationActive.lat], vehicles);
     // Add starting point to the map
-    map.addLayer({
-        id: 'point',
-        type: 'circle',
-        source: {
-            type: 'geojson',
-            data: {
-                type: 'FeatureCollection',
-                features: [{
-                    type: 'Feature',
-                    properties: {},
-                    geometry: {
-                        type: 'Point',
-                        coordinates: start
-                    }
-                }]
-            }
-        },
-        paint: {
-            'circle-radius': 10,
-            'circle-color': '#3887be'
-        }
-    });
+    // map.addLayer({
+    //     id: 'point',
+    //     type: 'circle',
+    //     source: {
+    //         type: 'geojson',
+    //         data: {
+    //             type: 'FeatureCollection',
+    //             features: [{
+    //                 type: 'Feature',
+    //                 properties: {},
+    //                 geometry: {
+    //                     type: 'Point',
+    //                     coordinates: start
+    //                 }
+    //             }]
+    //         }
+    //     },
+    //     paint: {
+    //         'circle-radius': 10,
+    //         'circle-color': '#3887be'
+    //     }
+    // });
     // this is where the code from the next step will go
     for (var arr of arrs) {
         content += "<li onclick=flyToLocation('" + arr.id + "')>" + arr.national + "</li>";
@@ -383,8 +382,9 @@ map.on('load', function() {
         var coords = Object.keys(coordsObj).map(function(key) {
             return coordsObj[key];
         });
-        console.log(coords);
-        console.log(coordsObj);
+        lonlatCurrent = coords;
+        //console.log(coords);
+        //console.log(coordsObj);
         var start = {
             type: 'FeatureCollection',
             features: [{
@@ -452,6 +452,7 @@ map.on('load', function() {
         map.getSource('single-point').setData(e.result.geometry);
         //console.log(e);
         //console.log(e.result.geometry.coordinates);
+        lonlatCurrent = e.result.geometry.coordinates;
         getRoute(e.result.geometry.coordinates, vehicles);
     });
 });
@@ -538,7 +539,8 @@ for (var i = 0; i < radioG.length; i++) {
     }
 }
 var ctrl = new MapboxDirections({
-    accessToken: mapboxgl.accessToken
+    accessToken: mapboxgl.accessToken,
+    language: 'vi'
 });
 
 function closemap() {
@@ -572,12 +574,12 @@ var geocoder = new MapboxGeocoder({
     accessToken: mapboxgl.accessToken, // Set the access token
     mapboxgl: mapboxgl, // Set the mapbox-gl instance
     marker: true, // Do not use the default marker style
-    placeholder: 'Nhập vị trí bắt đầu của bạn tại Hà Nội', // Placeholder text for the search bar
+    placeholder: 'Nhập vị trí bắt đầu của bạn', // Placeholder text for the search bar
     //bbox: [105.040945, 20.626792, 106.348476, 21.709620],
-    proximity: {
-        longitude: 105.803931,
-        latitude: 21.028659
-    } // Coordinates of university
+    // proximity: {
+    //     longitude: 105.803931,
+    //     latitude: 21.028659
+    // } // Coordinates of university
 });
 map.addControl(geocoder);
 // full screen
@@ -615,7 +617,8 @@ $(function() {
     $('.vehicles-item').click(function() {
         $('.vehicles-item').removeClass('active');
         $(this).addClass('active');
-        vehicles = $(this).val();
+        vehicles = $(this).context.attributes.value.value;
+        getRoute(lonlatCurrent, vehicles);
     })
 
 });

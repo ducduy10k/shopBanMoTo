@@ -32,8 +32,14 @@ class CartController extends Controller
           $cate_product = DB::table('tbl_category_product')->where('category_status','1')->orderby('category_id','desc')->get();
            $brand_product = DB::table('tbl_brand')->where('brand_status','1')->orderby('brand_id','desc')->get();
         $slide_product = DB::table('tbl_slide_home')->where('slide_status','1')->orderby('slide_id','desc')->get();
+        $all_shop =DB::table('tbl_shop_info')->where('shop_status','1')->orderby('shop_id','asc')->get();
 
-          return view('pages.cart.show_cart')->with('category', $cate_product)->with('brand', $brand_product)->with('all_slide',$slide_product);
+          return view('pages.cart.show_cart')
+          ->with('category', $cate_product)
+          ->with('brand', $brand_product)
+          ->with('all_slide',$slide_product)
+          ->with('all_shop', $all_shop);
+        
      }
      
           

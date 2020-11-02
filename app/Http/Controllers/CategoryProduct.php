@@ -86,6 +86,7 @@ class CategoryProduct extends Controller
         $cate_product = DB::table('tbl_category_product')->where('category_status','1')->orderby('category_id','desc')->get();
         $brand_product = DB::table('tbl_brand')->where('brand_status','1')->orderby('brand_id','desc')->get();
         $slide_product = DB::table('tbl_slide_home')->where('slide_status','1')->orderby('slide_id','desc')->get();
+        $all_shop =DB::table('tbl_shop_info')->where('shop_status','1')->orderby('shop_id','asc')->get();
 
         $category_by_id = DB::table('tbl_product')
         ->join('tbl_category_product','tbl_product.category_id','=','tbl_category_product.category_id')
@@ -97,6 +98,7 @@ class CategoryProduct extends Controller
         ->with('brand', $brand_product)
         ->with('all_slide',$slide_product)
         ->with('category_by_id', $category_by_id)
+        ->with('all_shop', $all_shop)
         ->with('category_name', $category_name);
     }  
     

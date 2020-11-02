@@ -43,10 +43,10 @@ canvas {
 
 #instructions {
     position: absolute;
-    width: 30%;
-    top: 60px;
+    width: 50%;
+    top: 114px;
     left: 10px;
-    bottom: 20%;
+    bottom: 24px;
     padding: 20px;
     background-color: rgba(255, 255, 255, 0.5);
     overflow-y: scroll;

@@ -65,13 +65,33 @@ body {
 .active {
     background-color: yellow;
 }
-.carousel-inner *{
-    color:white;
+
+.carousel-inner * {
+    color: white;
 }
+
 .g-recaptcha {
     transform-origin: 0 0;
     margin-left: 50%;
     transform: translateX(-50%) scale(0.77);
+}
+
+.productinfo:hover img {
+    transform: scale(1.2);
+}
+
+.productinfo img {
+    transition: 0.6s cubic-bezier(0, 0.01, 0, 0.99);
+}
+
+.panel-title a:hover {
+    color: #41a926 !important;
+    cursor: pointer;
+}
+
+.brands-name a:hover {
+    color: #41a926 !important;
+    cursor: pointer;
 }
 </style>
 <!--/head-->
@@ -308,25 +328,26 @@ body {
             <div style=" height:100% !important;width:100% !important;" id="map"></div>
             <div id="M3D" onclick="M3D()">3D</div>
             <div id="shop-position">
-                <select name="" id="">
-                    <option value="">Hà Nội</option>
-                    <option value="">Đà Nẵng</option>
-                    <option value="">TP Hồ Chí Minh</option>
+                <select name="" id="shop_info">
+                    @foreach($all_shop as $key => $shop)
+                    <option value="{{$shop->shop_id}}">{{$shop->shop_name}}</option>
+                    @endforeach
                 </select>
             </div>
             <div id="vehicles-option">
-                <div class='vehicles-item'>
+                <div class='vehicles-item active' value='walking'>
                     <i class="fas fa-walking"></i>
                 </div>
-                <div class='vehicles-item'>
-                    <i class="fas fa-motorcycle"></i>
-                </div>
-                <div class='vehicles-item'>
-                    <i class="fas fa-truck-moving"></i>
-                </div>
-                <div class='vehicles-item'>
+                <div class='vehicles-item' value='cycling'>
                     <i class="fas fa-bicycle"></i>
                 </div>
+                <div class='vehicles-item' value='driving'>
+                    <i class="fas fa-car"></i>
+                </div>
+                <div class='vehicles-item' value='driving-traffic'>
+                    <i class="fas fa-bus-alt"></i>
+                </div>
+
             </div>
             <!-- Instruction -->
             <div style="display: none;" id="instructions">hello</div>
@@ -384,7 +405,7 @@ body {
                         @endif
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" >Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary button-save" id="button-save-mess"
                             style="margin-top:0px;">Send</button>
                     </div>
@@ -401,67 +422,72 @@ body {
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title" id="modalPhoneTitle" style="text-align:center;">Để lại số điện thoại của bạn
-                    </h3>
-                    <h5 style="text-align:center;">Chúng tôi sẽ gọi lại cho bạn trog thời gian ngắn nhất </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                        style="margin-top: -46px;">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div
-                        style="height: 32px;border: 1px solid #ccc;width: 255px;display:inline-block;margin-left: 95px;border-bottom-left-radius:5px;border-top-left-radius:5px;">
-                        <i class="fas fa-phone-alt" style=" font-size: 17px; margin: 5px 10px;"></i>
-                        <input type="text" class='input-none-outline' style="border:none;margin: 5px 10px;width: 190px;"
-                            placeholder="Nhập số điện thoại của bạn ...">
+                <form action="{{URL::to('/send-phone')}}" method="POST">
+                {{ csrf_field() }}
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="modalPhoneTitle" style="text-align:center;">Để lại số điện thoại của
+                            bạn
+                        </h3>
+                        <h5 style="text-align:center;">Chúng tôi sẽ gọi lại cho bạn trog thời gian ngắn nhất </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            style="margin-top: -46px;">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div
+                            style="height: 32px;border: 1px solid #ccc;width: 255px;display:inline-block;margin-left: 95px;border-bottom-left-radius:5px;border-top-left-radius:5px;">
+                            <i class="fas fa-phone-alt" style=" font-size: 17px; margin: 5px 10px;"></i>
+                            <input type="text" class='input-none-outline' name="phone_number"
+                                style="border:none;margin: 5px 10px;width: 190px;"
+                                placeholder="Nhập số điện thoại của bạn ...">
 
+                        </div>
+                        <button type="submit" class="btn custom-btn btn-15"
+                            style="display: inline-block;margin-top: -5px;margin-left: -4px;border-bottom-left-radius: 0px;border-top-left-radius: 0px;">Yêu
+                            cầu gọi lại</button>
+                        <div style=" margin :10px auto;width:50%;">
+                            <span
+                                style="width:100px; height:2px;border-top:1px solid #ccc;display:inline-block;"></span>&nbsp&nbsp<span>Hoặc</span>&nbsp&nbsp<span
+                                style="width:100px; height:2px;border-top:1px solid #ccc;display:inline-block;"></span>
+                        </div>
+                        <br>
+                        <div style="text-align:center;">
+                            <h4>Liên hệ với chúng tôi qua Hotline :</h4>
+                            <h2>038 297 8706</h2>
+                        </div>
+                        <br>
+                        <div class="g-recaptcha" data-sitekey="{{env('CAPTCHA_KEY')}}"></div>
+                        <br />
+                        @if($errors->has('g-recaptcha-response-phone'))
+                        <span class="invalid-feedback" style="display:block">
+                            <strong>{{$errors->first('g-recaptcha-response-phone')}}</strong>
+                        </span>
+                        @endif
                     </div>
-                    <button class="btn custom-btn btn-15"
-                        style="display: inline-block;margin-top: -5px;margin-left: -4px;border-bottom-left-radius: 0px;border-top-left-radius: 0px;">Yêu
-                        cầu gọi lại</button>
-                    <div style=" margin :10px auto;width:50%;">
-                        <span
-                            style="width:100px; height:2px;border-top:1px solid #ccc;display:inline-block;"></span>&nbsp&nbsp<span>Hoặc</span>&nbsp&nbsp<span
-                            style="width:100px; height:2px;border-top:1px solid #ccc;display:inline-block;"></span>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
-                    <br>
-                    <div style="text-align:center;">
-                        <h4>Liên hệ với chúng tôi qua Hotline :</h4>
-                        <h2>038 297 8706</h2>
-                    </div>
-                    <br>
-                    <div class="g-recaptcha" data-sitekey="{{env('CAPTCHA_KEY')}}"></div>
-                    <br />
-                    @if($errors->has('g-recaptcha-response-phone'))
-                    <span class="invalid-feedback" style="display:block">
-                        <strong>{{$errors->first('g-recaptcha-response-phone')}}</strong>
-                    </span>
-                    @endif
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
+                </form>
             </div>
         </div>
     </div>
     <!-- End modal phone  -->
     <section id="slider">
         <!--slider-->
-        
+
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
                     <div id="slider-carousel" class="carousel slide" data-ride="carousel">
-                   
+
                         <ol class="carousel-indicators">
-                        <?php
+                            <?php
                             $i = 0;
 
                         ?>
-                             @foreach($all_slide as $key =>$slide)
-                             <?php
+                            @foreach($all_slide as $key =>$slide)
+                            <?php
                              
                              if($i==1){
                                echo '<li data-target="#slider-carousel" data-slide-to="'.$i.'" class="active"></li>';
@@ -473,14 +499,14 @@ body {
                              ?>
                             @endforeach
                         </ol>
-                        
+
                         <div class="carousel-inner">
-                        <?php
+                            <?php
                             $i = 0;
 
                         ?>
-                        @foreach($all_slide as $key =>$slide)
-                        <?php
+                            @foreach($all_slide as $key =>$slide)
+                            <?php
                          $i=$i+1;
                          if($i==1){
                              echo ' <div class="item active" style="position:relative;">';
@@ -489,34 +515,35 @@ body {
                          }
                         ?>
 
-                           
 
-                                <div class="col-sm-6" style="z-index:10;color:white;height:450px">
-                                    <h1 style="color:#ffbf80">Shop Mô tô</h1>
-                                    <h2 style="color:#ffd9b3">{{$slide->slide_title}}</h2>
-                                    <p style="color:#fff2e6">{{$slide->slide_desc}} </p>
-                                   
-                                </div>
-                                <div style="position:absolute;width:85%;height:100%;z-index:1">
-                                    <img src="{{URL::to('public/upload/product/'.$slide->slide_image)}}" style="object-fit:cover;" class="girl img-responsive" alt="" />
-									<!-- <img src="images/home/pricing.png"  class="pricing" alt="" /> -->
-                                </div>
+
+                            <div class="col-sm-6" style="z-index:10;color:white;height:450px">
+                                <h1 style="color:#ffbf80">Shop Mô tô</h1>
+                                <h2 style="color:#ffd9b3">{{$slide->slide_title}}</h2>
+                                <p style="color:#fff2e6">{{$slide->slide_desc}} </p>
+
                             </div>
-                            @endforeach
+                            <div style="position:absolute;width:85%;height:100%;z-index:1">
+                                <img src="{{URL::to('public/upload/product/'.$slide->slide_image)}}"
+                                    style="object-fit:cover;" class="girl img-responsive" alt="" />
+                                <!-- <img src="images/home/pricing.png"  class="pricing" alt="" /> -->
+                            </div>
                         </div>
-                        
-                        <a href="#slider-carousel" class="left control-carousel hidden-xs" data-slide="prev">
-                            <i class="fa fa-angle-left"></i>
-                        </a>
-                        <a href="#slider-carousel" class="right control-carousel hidden-xs" data-slide="next">
-                            <i class="fa fa-angle-right"></i>
-                        </a>
+                        @endforeach
                     </div>
 
+                    <a href="#slider-carousel" class="left control-carousel hidden-xs" data-slide="prev">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a href="#slider-carousel" class="right control-carousel hidden-xs" data-slide="next">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
                 </div>
+
             </div>
         </div>
-       
+        </div>
+
     </section>
     <!--/slider-->
 
@@ -532,8 +559,9 @@ body {
                             @foreach($category as $key =>$cate)
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <h4 class="panel-title"><a
-                                            href="{{URL::to('/danh-muc-san-pham/'.$cate->category_id)}}">{{$cate->category_name}}</a>
+                                    <h4 class="panel-title">
+                                        <a href="{{URL::to('/danh-muc-san-pham/'.$cate->category_id)}}"
+                                            class='category-product-item'>{{$cate->category_name}}</a>
                                     </h4>
                                 </div>
                             </div>
@@ -548,7 +576,8 @@ body {
                                 @foreach($brand as $key =>$bra)
                                 <ul class="nav nav-pills nav-stacked">
                                     <li>
-                                        <a href="{{URL::to('/thuong-hieu-san-pham/'.$bra->brand_id)}}"> <span
+                                        <a href="{{URL::to('/thuong-hieu-san-pham/'.$bra->brand_id)}}"
+                                            class='brand-product-item'> <span
                                                 class="pull-right">(50)</span>{{$bra->brand_name}}</a>
                                     </li>
                                 </ul>
@@ -770,10 +799,36 @@ body {
     <!-- Capcha -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
-
-
+    <script src="{{asset('public/frontend/js/MapBox.js')}}"></script>
     <script>
     var urlH = 'http://localhost:8080/shopbanmoto';
+    var m = <?php echo json_encode($all_shop);?>;
+
+    console.log(arrs);
+    for (var key in m) {
+        var item = m[key];
+        console.log(item);
+        arrs.push({
+            id: item.shop_id,
+            name: item.shop_name,
+            lon: item.longtitude,
+            lat: item.latitude
+        });
+        data.features.push({
+            'type': 'Feature',
+            'geometry': {
+                'type': 'Point',
+                'coordinates': [item.longtitude, item.latitude]
+            },
+            'properties': {
+                'text': item.shop_name,
+                'description': item.address
+            }
+        });
+    }
+
+    locationActive = arrs[0];
+
 
     // document.getElementById("language-active").addEventListener("click", function(event) {
     //     event.preventDefault()
@@ -795,7 +850,17 @@ body {
             $('#modalMessage').modal('show');
             $.removeCookie('modal');
         }
+        // Danh mục sản phẩm 
+        $('.category-product-item').click(function(e) {
+            $.cookie('scroll', window.pageYOffset);
+        });
 
+        // Thương hiệu sản phẩm 
+        $('.brand-product-item').click(function(e) {
+            $.cookie('scroll', window.pageYOffset);
+        })
+
+        // check mã giảm giá
         $('#check-coupon').click(function(e) {
             $.cookie('scroll', window.pageYOffset);
         })
@@ -803,6 +868,25 @@ body {
         $('.cart_quantity').click(function(e) {
             $.cookie('scroll', window.pageYOffset);
         })
+
+
+        // shop info
+        $('#shop_info').on('change', function() {
+            var x = this.value;
+            console.log(this.value);
+            arrs.forEach(function(item) {
+                if (item.id == x) {
+                    console.log(item)
+                    map.flyTo({
+                        center: [item.lon, item.lat],
+                        essential: true
+                    });
+                    locationActive = item;
+                }
+            });
+
+
+        });
 
         // fix loi ajax call 419 (unknown status)
         $.ajaxSetup({
@@ -878,7 +962,7 @@ body {
         })
     })
     </script>
-    <script src="{{asset('public/frontend/js/MapBox.js')}}"></script>
+
     <div id="fb-root"></div>
     <!-- Shase facebook -->
     <script async defer crossorigin="anonymous"
