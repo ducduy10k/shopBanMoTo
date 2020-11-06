@@ -32,7 +32,7 @@ class HomeController extends Controller
         // ->join('tbl_brand','tbl_product.brand_id','=','tbl_brand.brand_id')
         // ->join('tbl_category_product','tbl_product.category_id','=','tbl_category_product.category_id')
         // ->get();
-        $all_product =  DB::table('tbl_product')->where('product_status','1')->orderby('brand_id','desc')->limit(9)->get();
+        $all_product =  DB::table('tbl_product')->where('product_status','1')->orderby('brand_id','desc')->limit(6)->get();
         return view('pages.home')->with('category', $cate_product)->with('brand', $brand_product)->with('all_product', $all_product)
         ->with('all_slide',$slide_product)
         ->with('meta_desc',$meta_desc)
@@ -56,9 +56,6 @@ class HomeController extends Controller
         ->with('all_slide',$slide_product)
         ->with('search_product', $search_product)
         ->with('all_shop',$all_shop);
-
-
- 
     }
 
     public function printer(){
@@ -75,17 +72,13 @@ class HomeController extends Controller
 
     public function send_mail(){
          //send mail
-       
          $to_name = "N Duy";
          $to_email = "ducduy10k@gmail.com";//send to this email
          $data = array("name"=>"Mail từ tài khoản Khách hàng","body"=>'Mail gửi về vấn về hàng hóa'); //body of mail.blade.php
          Mail::send('pages.send_mail',$data,function($message) use ($to_name,$to_email){
              $message->to($to_email)->subject('Test thử gửi mail google');//send this mail with subject
              $message->from($to_email,$to_name);//send from this mail
-
          });
-
-
     }
 
     public function send_message(Request $request){
@@ -105,7 +98,16 @@ class HomeController extends Controller
         return Redirect::to('/');
     }
 
-    public function getLongLat($shop_id){
-        return 'xxxxxx';
+    public function send_phone(Request $request){
+        $data = $request->validate([
+            'phone_number' => 'required',
+           'g-recaptcha-response-phone' => new Captcha(), 		//dòng kiểm tra Captcha
+        ]);
+
+        $data  = array();
+        $data['phone_number'] = $request->customer_phone;
+        DB::table('tbl_phone_request')->insert($data);
+        Session::put('message','Đã gửi thành công');
+        return Redirect::to('/');
     }
 }

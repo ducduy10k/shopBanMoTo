@@ -110,7 +110,7 @@ input.cart_quantity_input {
                 <div class="total_area">
                     <ul>
                         <li>Tổng <span>{{Cart::subtotal().' '.'VNĐ'}}</span></li>
-                        <li>Thuế <span>{{Cart::tax().' '.'VNĐ'}}</span></li>
+                        
                         <li>Phí vận chuyển <span>Free</span></li>
                         <li>Thành tiền <span>{{Cart::subtotal().' '.'VNĐ'}}</span></li>
                     </ul>

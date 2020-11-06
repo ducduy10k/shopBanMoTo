@@ -53,13 +53,13 @@
                           }
                         ?> -->--}}
 
-                            <p>{{number_format($v_content->price).' VNĐ'}}</p>
+                            <p>{{number_format($v_content->price).' đ'}}</p>
                         </td>
                         <td>
                             <p>{{$v_content->qty}}</p>
                         </td>
                         <td>
-                            <p>{{number_format(floatval($v_content->price)*floatval($v_content->qty)).' '.'VNĐ'}}</p>
+                            <p>{{number_format(floatval($v_content->price)*floatval($v_content->qty)).' '.'đ'}}</p>
                         </td>
 
                     </tr>
@@ -70,15 +70,16 @@
                             <form action="{{URL::to('/check-coupon')}}" method="POST">
                                 {{ csrf_field() }}
                                 @if(Session::get('coupon'))
-                                        @foreach(Session::get('coupon') as $key =>$cou)
-                                <input type="text" class="form-control" value="{{$cou['coupon_code']}}"  name="coupon" placeholder="Nhập mã giảm giá">
+                                @foreach(Session::get('coupon') as $key =>$cou)
+                                <input type="text" class="form-control" value="{{$cou['coupon_code']}}" name="coupon"
+                                    placeholder="Nhập mã giảm giá">
                                 @endforeach
                                 @else
-                                <input type="text" class="form-control"  name="coupon" placeholder="Nhập mã giảm giá">
+                                <input type="text" class="form-control" name="coupon" placeholder="Nhập mã giảm giá">
                                 @endif
                                 <br>
-                                <input type="submit" id="check-coupon" class="btn btn-default check_coupon" name="check_coupon"
-                                    value='Kiểm tra'>
+                                <input type="submit" id="check-coupon" class="btn btn-default check_coupon"
+                                    name="check_coupon" value='Kiểm tra'>
                             </form>
                             <?php
 			$message = Session::get('message');
@@ -99,43 +100,34 @@
                             <table class="table table-condensed total-result">
                                 <tr>
                                     <td>Tổng tiền đơn hàng</td>
-                                    <td>{{number_format((floatval(preg_replace("/[^-0-9\.]/","",Cart::priceTotal())))).' '.'đ'}}</td>
+                                    <td>{{number_format(((float)(preg_replace("/[^-0-9\.]/","",Cart::priceTotal())))).' '.'đ'}}
+                                    </td>
                                 </tr>
-                                <tr>
+                                {{-- <tr>
                                     <td>Thuế</td>
-                                    <td>{{number_format((floatval(preg_replace("/[^-0-9\.]/","",Cart::tax())))).' '.'đ'}}</td>
-                                </tr>
-                                <tr class="shipping-cost">
-                                    <td>Phí vận chuyển</td>
-                                    <td>Free</td>
-                                </tr>
-                                <tr class="shipping-cost">
-                                    <td>Mã giảm giá</td>
-                                    <td>
-                                        @if(Session::get('coupon'))
-                                        @foreach(Session::get('coupon') as $key =>$cou)
-                                        
-                                        @if($cou['coupon_condition'] == 1)
-                                        {{$cou['coupon_number']}} %
+                                    <td>{{number_format(((float)(preg_replace("/[^-0-9\.]/","",Cart::tax())))).' '.'đ'}}
+                        </td>
+                    </tr>--}}
 
-                                        @php
-                                        echo '</td>
-                                </tr>
-                                <tr>
-                                    <td>Số tiền giảm</td>
-                                    <td>';
-                                        $total_coupon = (floatval(preg_replace("/[^-0-9\.]/","",Cart::priceTotal()))*
-                                        $cou['coupon_number']) /100;
-                                        Cart::setGlobalDiscount($cou['coupon_number']);
-                                        echo ''.number_format($total_coupon);
-                                        echo '</td>
-                                </tr>'
-                                @endphp
-                                @elseif($cou['coupon_condition'] == 2)
-                                {{$cou['coupon_number']}} đ
-                                @php
-                                Cart::setGlobalDiscount($cou['coupon_number']*100/floatval(preg_replace("/[^-0-9\.]/","",Cart::priceTotal())));
-                                echo '
+
+                    <tr class="shipping-cost">
+                        <td>Mã giảm giá</td>
+                        <td>
+                            @if(Session::get('coupon'))
+                            @foreach(Session::get('coupon') as $key =>$cou)
+
+                            @if($cou['coupon_condition'] == 1)
+                            {{$cou['coupon_number']}} %
+                            @php
+                            Cart::setGlobalDiscount($cou['coupon_number']);
+                            @endphp
+
+                            @elseif($cou['coupon_condition'] == 2)
+                            {{$cou['coupon_number']}} đ
+                            @php
+                            if((float)(preg_replace("/[^-0-9\.]/","",Cart::subTotal()))!=0)
+                            Cart::setGlobalDiscount($cou['coupon_number']*100/(float)(preg_replace("/[^-0-9\.]/","",Cart::subTotal())));
+                            echo '
                         </td>
                         '
                         @endphp
@@ -150,17 +142,55 @@
 
 
 
-
+                    <tr class="shipping-cost">
+                        <td>Phí vận chuyển</td>
+                        <td>
+                            @if(Session::get('fee')==0)
+                            @php
+                            echo 'free';
+                            Cart::setGlobalTax(0);
+                            @endphp
+                            @else
+                            @php
+                            echo Session::get('fee');
+                            if( (float)(preg_replace("/[^-0-9\.]/","",Cart::priceTotal()))!=0 ){
+                                 Cart::setGlobalTax(Session::get('fee')*100/(float)(preg_replace("/[^-0-9\.]/","",Cart::priceTotal())));
+                            }
+                            @endphp
+                            @endif
+                        </td>
+                    </tr>
 
                     <tr>
                         <td>Thành tiền</td>
                         <td>
+                            @if(Session::get('coupon'))
+                            @foreach(Session::get('coupon') as $key =>$cou)
+
+                            @if($cou['coupon_condition'] == 2)
                             @php
                             echo '';
-                            $total_coupon = (floatval(preg_replace("/[^-0-9\.]/","",Cart::priceTotal())));
-                            echo ''.number_format((floatval(preg_replace("/[^-0-9\.]/","",Cart::subtotal()))));
+                            echo ''.number_format(round(floatval(preg_replace("/[^-0-9\.]/","",Cart::priceTotal())) + Session::get('fee') - $cou['coupon_number'],-3));
                             echo ' đ'
                             @endphp
+
+                            @elseif($cou['coupon_condition'] == 1)
+                            @php
+                            echo '';
+                            echo ''.number_format(round(
+                            floatval(preg_replace("/[^-0-9\.]/","",Session::get('fee')))*$cou['coupon_number']/100 +
+                            floatval(preg_replace("/[^-0-9\.]/","",Cart::total())),-0));
+                            echo ' đ'
+                            @endphp
+                            @endif
+                            @endforeach
+                            @else
+                            @php
+                            echo '';
+                            echo ''.number_format(round(floatval(preg_replace("/[^-0-9\.]/","",Cart::total())),-4));
+                            echo ' đ';
+                            @endphp
+                            @endif
                         </td>
                     </tr>
             </table>
@@ -187,6 +217,7 @@
             </div>
             <input type="submit" value="Thanh toán" name="send_order_place" class="btn btn-primary btn-sm">
         </form>
+        <p></p>
     </div>
 </section>
 <!--/#cart_items-->

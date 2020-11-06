@@ -96,12 +96,14 @@ Route::post('/update-cart', 'CartController@update_cart');
 Route::get('/login-checkout', 'CheckoutController@login_checkout');
 Route::post('/add-customer', 'CheckoutController@add_customer');
 Route::get('/checkout', 'CheckoutController@checkout');
-Route::post('/save-checkout-customer', 'CheckoutController@save_checkout_customer');
+
 Route::get('/logout-checkout', 'CheckoutController@logout_checkout');
 Route::post('/login-customer', 'CheckoutController@login_customer');
 Route::get('/payment', 'CheckoutController@payment');
 Route::post('/order-place', 'CheckoutController@order_place');
+Route::post('/select-delivery-home', 'CheckoutController@select_delivery_home');
 
+Route::post('/save-checkout-customer', 'CheckoutController@save_checkout_customer');
 
 
 //Login facebook
@@ -122,3 +124,4 @@ Route::get('login_injection', 'HomeController@login_injection');
 Route::get('/send-mail', 'HomeController@send_mail');
 Route::get('/login-facebook-home/{rowId}', 'CheckoutController@login_facebook');// home
 Route::post('/send-message', 'HomeController@send_message');
+Route::post('/send-phone', 'HomeController@send_phone');

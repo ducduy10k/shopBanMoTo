@@ -615,8 +615,8 @@ $(function() {
     });
 
     $('.vehicles-item').click(function() {
-        $('.vehicles-item').removeClass('active');
-        $(this).addClass('active');
+        $('.vehicles-item').removeClass('isactive');
+        $(this).addClass('isactive');
         vehicles = $(this).context.attributes.value.value;
         getRoute(lonlatCurrent, vehicles);
     })

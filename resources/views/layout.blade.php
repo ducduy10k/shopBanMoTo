@@ -62,7 +62,7 @@ body {
 
 
 
-.active {
+.isactive {
     background-color: yellow;
 }
 
@@ -92,6 +92,11 @@ body {
 .brands-name a:hover {
     color: #41a926 !important;
     cursor: pointer;
+}
+
+
+.mb-5 {
+    margin-bottom: 5px;
 }
 </style>
 <!--/head-->
@@ -241,23 +246,12 @@ body {
                         <div class="mainmenu pull-left">
                             <ul class="nav navbar-nav collapse navbar-collapse">
                                 <li><a href="{{URL::to('/trang-chu')}}" class="active">Trang chủ</a></li>
-                                <li class="dropdown"><a href="#">Sản phẩm<i class="fa fa-angle-down"></i></a>
-                                    <ul role="menu" class="sub-menu">
-                                        <li><a href="shop.html">Products</a></li>
-                                        <li><a href="product-details.html">Product Details</a></li>
-                                        <li><a href="checkout.html">Checkout</a></li>
-                                        <li><a href="cart.html">Cart</a></li>
-                                        <li><a href="login.html">Login</a></li>
-                                    </ul>
+                                @foreach($brand as $key =>$bra)
+                                <li>
+                                    <a href="{{URL::to('/thuong-hieu-san-pham/'.$bra->brand_id)}}"
+                                        class='brand-product-item'>{{$bra->brand_name}}</a>
                                 </li>
-                                <li class="dropdown"><a href="#">Blog - Tin tức<i class="fa fa-angle-down"></i></a>
-                                    <ul role="menu" class="sub-menu">
-                                        <li><a href="blog.html">Blog List</a></li>
-                                        <li><a href="blog-single.html">Blog Single</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="{{URL::to('show_cart')}}">Giỏ hàng</a></li>
-                                <li><a href="contact-us.html">Video</a></li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>
@@ -335,7 +329,7 @@ body {
                 </select>
             </div>
             <div id="vehicles-option">
-                <div class='vehicles-item active' value='walking'>
+                <div class='vehicles-item isactive' value='walking'>
                     <i class="fas fa-walking"></i>
                 </div>
                 <div class='vehicles-item' value='cycling'>
@@ -380,10 +374,13 @@ body {
 				        echo '<span style="color:green;">'. $message.'</span>';
 				        Session::put('message',null);
 			            }
-			            ?>
-                        @foreach($errors->all() as $val)
-                        {{$val}}
-                        @endforeach
+                        ?>
+                        <ul>
+                            @foreach($errors->all() as $val)
+                            <li>{{$val}}</li>
+
+                            @endforeach
+                        </ul>
                         <div>
                             <p style="margin-top:5px;">&nbsp Phone number (*)</p>
                             <input type="tel" name="customer_phone" placeholder='Enter your phone number ... '
@@ -423,7 +420,7 @@ body {
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <form action="{{URL::to('/send-phone')}}" method="POST">
-                {{ csrf_field() }}
+                    {{ csrf_field() }}
                     <div class="modal-header">
                         <h3 class="modal-title" id="modalPhoneTitle" style="text-align:center;">Để lại số điện thoại của
                             bạn
@@ -480,15 +477,12 @@ body {
             <div class="row">
                 <div class="col-sm-12">
                     <div id="slider-carousel" class="carousel slide" data-ride="carousel">
-
                         <ol class="carousel-indicators">
                             <?php
                             $i = 0;
-
                         ?>
                             @foreach($all_slide as $key =>$slide)
                             <?php
-                             
                              if($i==1){
                                echo '<li data-target="#slider-carousel" data-slide-to="'.$i.'" class="active"></li>';
                              }
@@ -499,11 +493,9 @@ body {
                              ?>
                             @endforeach
                         </ol>
-
                         <div class="carousel-inner">
                             <?php
                             $i = 0;
-
                         ?>
                             @foreach($all_slide as $key =>$slide)
                             <?php
@@ -514,14 +506,10 @@ body {
                             echo ' <div class="item" style="position:relative;">';
                          }
                         ?>
-
-
-
-                            <div class="col-sm-6" style="z-index:10;color:white;height:450px">
+                            <div class="col-sm-6" style="z-index:10;color:white;height:400px">
                                 <h1 style="color:#ffbf80">Shop Mô tô</h1>
                                 <h2 style="color:#ffd9b3">{{$slide->slide_title}}</h2>
                                 <p style="color:#fff2e6">{{$slide->slide_desc}} </p>
-
                             </div>
                             <div style="position:absolute;width:85%;height:100%;z-index:1">
                                 <img src="{{URL::to('public/upload/product/'.$slide->slide_image)}}"
@@ -539,7 +527,6 @@ body {
                         <i class="fa fa-angle-right"></i>
                     </a>
                 </div>
-
             </div>
         </div>
         </div>
@@ -555,7 +542,6 @@ body {
                         <h2>Danh mục sản phẩm</h2>
                         <div class="panel-group category-products" id="accordian">
                             <!--category-productsr-->
-
                             @foreach($category as $key =>$cate)
                             <div class="panel panel-default">
                                 <div class="panel-heading">
@@ -568,40 +554,23 @@ body {
                             @endforeach
                         </div>
                         <!--/category-products-->
-
+                        <!--brands_products
                         <div class="brands_products">
-                            <!--brands_products-->
                             <h2>Thương hiệu</h2>
                             <div class="brands-name">
                                 @foreach($brand as $key =>$bra)
                                 <ul class="nav nav-pills nav-stacked">
                                     <li>
                                         <a href="{{URL::to('/thuong-hieu-san-pham/'.$bra->brand_id)}}"
-                                            class='brand-product-item'> <span
-                                                class="pull-right">(50)</span>{{$bra->brand_name}}</a>
+                                            class='brand-product-item'>{{$bra->brand_name}}</a>
                                     </li>
                                 </ul>
                                 @endforeach
                             </div>
                         </div>
-                        <!--/brands_products-->
+                        brands_products-->
 
-                        <div class="price-range">
-                            <!--price-range-->
-                            <h2>Price Range</h2>
-                            <div class="well text-center">
-                                <input type="text" class="span2" value="" data-slider-min="0" data-slider-max="600"
-                                    data-slider-step="5" data-slider-value="[250,450]" id="sl2"><br />
-                                <b class="pull-left">$ 0</b> <b class="pull-right">$ 600</b>
-                            </div>
-                        </div>
-                        <!--/price-range-->
-
-                        <div class="shipping text-center">
-                            <!--shipping-->
-                        </div>
-                        <!--/shipping-->
-
+                       
                     </div>
                 </div>
 
@@ -612,146 +581,25 @@ body {
         </div>
     </section>
 
-    <footer id="footer">
-        <!--Footer-->
-        <div class="footer-top">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-2">
-                        <div class="companyinfo">
-                            <h2><span>e</span>-shopper</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit,sed do eiusmod tempor</p>
-                        </div>
+    <footer class="footer  ">
+
+        <div class="top-footer">
+            <div class="container-fluid">
+                <div class="row" style="margin-right: 0;margin-left: 0;">
+
+                    <div class="col-xs-12 col-sm-12 col-md-8">
                     </div>
-                    <div class="col-sm-7">
-                        <div class="col-sm-3">
-                            <div class="video-gallery text-center">
-                                <a href="#">
-                                    <div class="iframe-img">
-                                    </div>
-                                    <div class="overlay-icon">
-                                        <i class="fa fa-play-circle-o"></i>
-                                    </div>
+
+
+                    <div class="col-xs-12 col-sm-12 col-md-4">
+                        <div class="area_phone_contact">
+                            <p class="number_phone">
+                                <i class="fa fa-phone "></i>
+                                <span>Hỗ trợ / Mua hàng:</span>
+                                <a href="tel:0382978706">
+                                    038.297.8706
                                 </a>
-                                <p>Circle of Hands</p>
-                                <h2>24 DEC 2014</h2>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-3">
-                            <div class="video-gallery text-center">
-                                <a href="#">
-                                    <div class="iframe-img">
-
-                                    </div>
-                                    <div class="overlay-icon">
-                                        <i class="fa fa-play-circle-o"></i>
-                                    </div>
-                                </a>
-                                <p>Circle of Hands</p>
-                                <h2>24 DEC 2014</h2>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-3">
-                            <div class="video-gallery text-center">
-                                <a href="#">
-                                    <div class="iframe-img">
-                                    </div>
-                                    <div class="overlay-icon">
-                                        <i class="fa fa-play-circle-o"></i>
-                                    </div>
-                                </a>
-                                <p>Circle of Hands</p>
-                                <h2>24 DEC 2014</h2>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-3">
-                            <div class="video-gallery text-center">
-                                <a href="#">
-                                    <div class="iframe-img">
-
-                                    </div>
-                                    <div class="overlay-icon">
-                                        <i class="fa fa-play-circle-o"></i>
-                                    </div>
-                                </a>
-                                <p>Circle of Hands</p>
-                                <h2>24 DEC 2014</h2>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="address">
-
-                            <p>505 S Atlantic Ave Virginia Beach, VA(Virginia)</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="footer-widget">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-2">
-                        <div class="single-widget">
-                            <h2>Service</h2>
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#">Online Help</a></li>
-                                <li><a href="#">Contact Us</a></li>
-                                <li><a href="#">Order Status</a></li>
-                                <li><a href="#">Change Location</a></li>
-                                <li><a href="#">FAQ’s</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class="single-widget">
-                            <h2>Quock Shop</h2>
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#">T-Shirt</a></li>
-                                <li><a href="#">Mens</a></li>
-                                <li><a href="#">Womens</a></li>
-                                <li><a href="#">Gift Cards</a></li>
-                                <li><a href="#">Shoes</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class="single-widget">
-                            <h2>Policies</h2>
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#">Terms of Use</a></li>
-                                <li><a href="#">Privecy Policy</a></li>
-                                <li><a href="#">Refund Policy</a></li>
-                                <li><a href="#">Billing System</a></li>
-                                <li><a href="#">Ticket System</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class="single-widget">
-                            <h2>About Shopper</h2>
-                            <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#">Company Information</a></li>
-                                <li><a href="#">Careers</a></li>
-                                <li><a href="#">Store Location</a></li>
-                                <li><a href="#">Affillate Program</a></li>
-                                <li><a href="#">Copyright</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-sm-3 col-sm-offset-1">
-                        <div class="single-widget">
-                            <h2>About Shopper</h2>
-                            <form action="#" class="searchform">
-                                <input type="text" placeholder="Your email address" />
-                                <button type="submit" class="btn btn-default"><i
-                                        class="fa fa-arrow-circle-o-right"></i></button>
-                                <p>Get the most recent updates from <br />our site and be updated your self...</p>
-                            </form>
+                            </p>
                         </div>
                     </div>
 
@@ -759,18 +607,117 @@ body {
             </div>
         </div>
 
-        <div class="footer-bottom">
-            <div class="container">
-                <div class="row">
-                    <p class="pull-left" id='testTranslate'>Copyright © 2013 E-SHOPPER Inc. All rights reserved.</p>
-                    <p class="pull-right">Designed by <span><a target="_blank"
-                                href="http://www.themeum.com">Themeum</a></span></p>
+        <div class="title-expand visible-xs text-center">
+            <a class="btn-fter" data-toggle="collapse" href="#fter-content" role="button" aria-expanded="true"
+                aria-controls="fter-content">
+                Thông tin khác<span class="fa fa-angle-down"> </span>
+            </a>
+        </div>
+        <div class="main-footer collapse" style="padding:0;" id="fter-content">
+            <div class="container-fluid">
+                <div class="row" style="margin:0;">
+
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg">
+                        <div class="footer-col footer-content1">
+                            <h4 class="footer-title">
+                                Giới thiệu
+                            </h4>
+                            <div class="footer-content">
+
+                                <p>ShopBanMoTo.vn Shop mô tô - Hệ thống phân phối xe mô tô phân khối lớn uy tín tại Việt
+                                    Nam </p>
+
+
+                                <div class="logo-footer">
+                                    <img src="//theme.hstatic.net/1000241714/1000477078/14/logo-bct.png?v=188"
+                                        alt="Bộ Công Thương">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-xs-12 col-sm-6 col-md-2 col-lg">
+                        <div class="footer-col footer-block">
+                            <h4 class="footer-title">
+                                Liên kết
+                            </h4>
+                            <div class="footer-content toggle-footer">
+                                <ul>
+                                    <li class="item">
+                                        <a href="" title="Liên Hệ">Facebook</a>
+                                    </li>
+                                    <li class="item">
+                                        <a href="" title="Khách hàng">Zalo</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-3 col-lg">
+                        <div class="footer-col">
+                            <h4 class="footer-title">
+                                Hệ thống showroom
+                            </h4>
+                            <div class="footer-content footer-contact">
+                                <ul>
+                                    <li style="display:flex;flex:1;align-items: center;">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <p style="margin:0;padding-left:10px;">
+                                            + Số nhà 17, ngõ 445 Nguyễn Khang, Cầu Giấy, Hà Nội <br>
+                                            + Xóm 3, Ân Hòa, Kim Sơn, Ninh Bình
+                                        </p>
+                                    </li>
+                                    <li style="display:flex;flex:1;align-items: center;">
+                                        <i class="fas fa-mobile-alt"></i>
+                                        <p style="margin:0;padding-left:10px;"> 038 297 8706</p>
+                                    </li>
+                                    <li style="display:flex;flex:1;align-items: center;">
+                                        <i class="far fa-envelope"></i>
+                                        <p style="margin:0;padding-left:10px;">
+                                            ducduy10k@gmail.com
+                                        </p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-xs-12 col-sm-6 col-md-3 col-lg">
+                        <div class="footer-col">
+                            <h4 class="footer-title">
+                                Fanpage
+                            </h4>
+                            <div class="footer-content footer-contact">
+                                <!-- Facebook widget -->
+                                <div class="fb-page"
+                                    data-href="https://www.facebook.com/Shop-Moto-C%E1%BA%A7u-Gi%E1%BA%A5y-102527788259135"
+                                    data-tabs="timeline" data-width="300" data-height="90" data-small-header="false"
+                                    data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true">
+                                    <blockquote
+                                        cite="https://www.facebook.com/Shop-Moto-C%E1%BA%A7u-Gi%E1%BA%A5y-102527788259135"
+                                        class="fb-xfbml-parse-ignore"><a
+                                            href="https://www.facebook.com/Shop-Moto-C%E1%BA%A7u-Gi%E1%BA%A5y-102527788259135">Shop
+                                            Moto Cầu Giấy</a></blockquote>
+                                </div>
+                                <!-- #Facebook widget -->
+
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
-
+        <div class="bottom-footer text-center">
+            <div class="container-fluid">
+                <p>Copyright © 2020 <a href="http://localhost:8080/shopbanmoto/"> Shop Moto</a>.Powered by Haravan</a>
+                </p>
+            </div>
+        </div>
     </footer>
-    <!--/Footer-->
 
 
 
@@ -800,10 +747,10 @@ body {
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
     <script src="{{asset('public/frontend/js/MapBox.js')}}"></script>
+    <script src="{{asset('public/frontend/js/custom.js')}}"></script>
     <script>
     var urlH = 'http://localhost:8080/shopbanmoto';
     var m = <?php echo json_encode($all_shop);?>;
-
     console.log(arrs);
     for (var key in m) {
         var item = m[key];
@@ -826,143 +773,81 @@ body {
             }
         });
     }
-
     locationActive = arrs[0];
+    </script>
 
-
-    // document.getElementById("language-active").addEventListener("click", function(event) {
-    //     event.preventDefault()
-    // })
-
+    <script>
     $(function() {
-        console.log('ok')
-        var scroll = $.cookie('scroll');
-        var modal = $.cookie('modal');
 
-        if (scroll) {
-            $('html,body').animate({
-                scrollTop: scroll
-            }, 0.1);
-            $.removeCookie('scroll');
-        }
+        $('.choose').on('change', function() {
+            var action = $(this).attr('id');
+            var ma_id = $(this).val();
+            var _token = $('input[name="_token"]').val();
+            var result = '';
 
-        if (modal) {
-            $('#modalMessage').modal('show');
-            $.removeCookie('modal');
-        }
-        // Danh mục sản phẩm 
-        $('.category-product-item').click(function(e) {
-            $.cookie('scroll', window.pageYOffset);
-        });
-
-        // Thương hiệu sản phẩm 
-        $('.brand-product-item').click(function(e) {
-            $.cookie('scroll', window.pageYOffset);
-        })
-
-        // check mã giảm giá
-        $('#check-coupon').click(function(e) {
-            $.cookie('scroll', window.pageYOffset);
-        })
-
-        $('.cart_quantity').click(function(e) {
-            $.cookie('scroll', window.pageYOffset);
-        })
-
-
-        // shop info
-        $('#shop_info').on('change', function() {
-            var x = this.value;
-            console.log(this.value);
-            arrs.forEach(function(item) {
-                if (item.id == x) {
-                    console.log(item)
-                    map.flyTo({
-                        center: [item.lon, item.lat],
-                        essential: true
-                    });
-                    locationActive = item;
+            if (action == 'city') {
+                result = 'province';
+            } else {
+                result = 'wards';
+            }
+            $.ajax({
+                url: "{{url('/select-delivery-home')}}",
+                method: 'POST',
+                data: {
+                    action: action,
+                    ma_id: ma_id,
+                    _token: _token
+                },
+                success: function(data) {
+                    $('#' + result).html(data);
                 }
             });
-
-
-        });
-
-        // fix loi ajax call 419 (unknown status)
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
         });
 
 
-        $('.button-save').click(function(event) {
-            $.cookie('scroll', window.pageYOffset);
-        })
-
-        $('#button-save-mess').click(function(event) {
-            $.cookie('modal', '#modalMessage');
-        })
-
-        $('#language-active').click(function(event) {
-            console.log("da vao");
-            $('#optionLanguage').toggleClass('openOptionLanguage');
-        });
-        $('#open-modal-zalo').click(function(event) {
-            newwindown = window.open('https://zalo.me/0382978706', '_blank');
-        })
-
-        $('#open-modal-messeger').click(function(event) {
-            newwindown = window.open('https://www.facebook.com/messages/t/102527788259135', '_blank');
-        })
-
-        $('.cart_quantity_input').on('keypress', function(e) {
-            var id = $(this).next().val();
-            console.log(e);
-            if (e.which === 13) {
-                console.log('oik');
-                $.ajax({
-                    url: urlH + '/update-cart',
-                    data: {
-                        'val': $(this).val(),
-                        'id': id
-                    },
-                    method: 'POST',
-                    success: function() {
-                        $.cookie('scroll', window.pageYOffset);
-                        $(location).attr('href', urlH + '/show-cart');
-                        console.log($(location));
-                    },
-                    error: function() {
-                        alert('error');
-                    }
-
-                })
-                console.log('oik');
-            }
-        });
-        $('.cart_quantity_input').focusout(function() {
-            var id = $(this).next().val();
-            $.ajax({
-                url: urlH + '/update-cart',
-                data: {
-                    'val': $(this).val(),
-                    'id': id
-                },
-                method: 'POST',
-                success: function() {
-                    $.cookie('scroll', window.pageYOffset);
-                    $(location).attr('href', urlH + '/show-cart');
-                },
-                error: function() {
-                    alert('error');
-                }
-
-            })
-        })
     })
     </script>
 
+    
+    <script type = "text/javascript" >
+        $(document).ready(function() {
+            $('.calculate_delivery').click(function() {
+               var shipping_name= $('.shipping_name').val();
+               var shipping_email= $('.shipping_email').val();
+               var shipping_address= $('.shipping_address').val();
+               var  shipping_notes= $('.shipping_notes').val();
+               var  shipping_phone= $('.shipping_phone').val();
+                var matp = $('.city').val();
+                var maqh = $('.province').val();
+                var xaid = $('.wards').val();
+                var _token = $('input[name="_token"]').val();
+                if (matp == '' && maqh == '' && xaid == ''||shipping_name == ''||shipping_email == ''||shipping_address == ''||shipping_notes == ''||shipping_phone == '') {
+                    alert('Làm ơn chọn để tính phí vận chuyển');
+                } else {
+                    $.ajax({
+                        url: "{{url('/save-checkout-customer')}}",
+                        method: 'POST',
+                        data: {
+                            shipping_name:shipping_name,
+                            shipping_email:shipping_email,
+                            shipping_address:shipping_address,
+                            shipping_notes:shipping_notes,
+                            shipping_phone:shipping_phone,
+                            matp: matp,
+                            maqh: maqh,
+                            xaid: xaid,
+                            _token: _token,
+                        },
+                        success: function() {
+                            $(location).attr('href', urlH + '/payment');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+  
     <div id="fb-root"></div>
     <!-- Shase facebook -->
     <script async defer crossorigin="anonymous"

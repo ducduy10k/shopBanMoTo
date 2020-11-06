@@ -9,9 +9,36 @@ use Session ;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Redirect;
 session_start();
+use App\City;
+use App\Province;
+use App\Wards;
+use App\Feeship;
+
+
+
 class CheckoutController extends Controller
 {
     //
+    public function select_delivery_home(Request $request){
+        $data = $request->all();
+        if($data['action']){
+            $output = '';
+            if($data['action']=='city'){
+                $select_province = Province::where('matp',$data['ma_id'])->orderby('maqh','ASC')->get();
+                $output .= ' <option value="">--Chọn quận huyện--</option>';
+                foreach($select_province as $key =>$province){
+                    $output .= ' <option value="'.$province->maqh.'">'.$province->name_quanhuyen.'</option>';
+                }
+            }else{
+                $select_wards = Wards::where('maqh',$data['ma_id'])->orderby('xaid','ASC')->get();
+                $output .= ' <option value="">--Chọn phường xã --</option>';
+                foreach($select_wards as $key =>$wards){
+                    $output .= ' <option value="'.$wards->xaid.'">'.$wards->name_xaphuong.'</option>';
+                } 
+            }
+            echo $output;
+        }
+    }
     public function login_checkout(){
 
         $cate_product = DB::table('tbl_category_product')->where('category_status','1')->orderby('category_id','desc')->get();
@@ -19,7 +46,11 @@ class CheckoutController extends Controller
         $slide_product = DB::table('tbl_slide_home')->where('slide_status','1')->orderby('slide_id','desc')->get();
         $all_shop =DB::table('tbl_shop_info')->where('shop_status','1')->orderby('shop_id','asc')->get();
 
-    	return view('pages.checkout.login_checkout')->with('category', $cate_product)->with('brand', $brand_product)->with('all_slide',$slide_product);
+        return view('pages.checkout.login_checkout')->with('category', $cate_product)
+        ->with('brand', $brand_product)
+        ->with('all_shop', $all_shop)
+        ->with('all_slide',$slide_product)
+        ;
         
     }
 
@@ -41,21 +72,42 @@ class CheckoutController extends Controller
         $brand_product = DB::table('tbl_brand')->where('brand_status','1')->orderby('brand_id','desc')->get();
         $slide_product = DB::table('tbl_slide_home')->where('slide_status','1')->orderby('slide_id','desc')->get();
         $all_shop =DB::table('tbl_shop_info')->where('shop_status','1')->orderby('shop_id','asc')->get();
-
-        return view('pages.checkout.checkout')->with('category', $cate_product)->with('brand', $brand_product)
-        ->with('all_slide',$slide_product);
+        $city = City::orderby('matp','ASC')->get();
+        return view('pages.checkout.checkout')
+        ->with('all_shop', $all_shop)
+        ->with('category', $cate_product)
+        ->with('brand', $brand_product)
+        ->with('all_slide',$slide_product)
+        ->with('city',$city);
     }
 
     public function save_checkout_customer(Request $request){
-        $data = array();
-        $data['shipping_name'] = $request->shipping_name;
-        $data['shipping_email'] = $request->shipping_email;
-        $data['shipping_address'] = $request->shipping_address;
-        $data['shipping_notes'] = $request->shipping_notes;
-        $data['shipping_phone'] = $request->shipping_phone;
-        $shipping_id = DB::table('tbl_shipping')->insertGetId($data);   
+        $data = $request->all();
+        $data1 = array();
+        $data1['shipping_name'] = $request->shipping_name;
+        $data1['shipping_email'] = $request->shipping_email;
+        $data1['shipping_address'] = $request->shipping_address;
+        $data1['shipping_notes'] = $request->shipping_notes;
+        $data1['shipping_phone'] = $request->shipping_phone;
+        $shipping_id = DB::table('tbl_shipping')->insertGetId($data1);  
+        if($data['matp']){
+            $feeship = Feeship::where('fee_matp',$data['matp'])->where('fee_maqh',$data['maqh'])->where('fee_xaid',$data['xaid'])->get();
+            if($feeship){
+                $count_feeship = $feeship->count();
+                if($count_feeship>0){
+                     foreach($feeship as $key => $fee){
+                        Session::put('fee',$fee->fee_feeship);
+                        Session::save();
+                    }
+                }else{ 
+                    Session::put('fee',25000);
+                    Session::save();
+                }
+            }
+           
+        }
         Session::put('shipping_id',$shipping_id);
-        return Redirect::to('/payment');
+        //return Redirect::to('/payment');
     }
 
     public function payment(){
@@ -64,7 +116,9 @@ class CheckoutController extends Controller
         $slide_product = DB::table('tbl_slide_home')->where('slide_status','1')->orderby('slide_id','desc')->get();
         $all_shop =DB::table('tbl_shop_info')->where('shop_status','1')->orderby('shop_id','asc')->get();
         
-    	return view('pages.checkout.payment')->with('category', $cate_product)->with('brand', $brand_product)->with('all_slide',$slide_product);
+        return view('pages.checkout.payment')
+        ->with('category', $cate_product)->with('all_shop', $all_shop)
+        ->with('brand', $brand_product)->with('all_slide',$slide_product);
      
     }
 
@@ -86,8 +140,30 @@ class CheckoutController extends Controller
         $order_data['customer_id'] = Session::get('customer_id');
         $order_data['shipping_id'] = Session::get('shipping_id');
         $order_data['payment_id'] = $payment_id;
-        $order_data['order_total'] = Cart::total();
-        $order_data['order_status'] = "Đang chờ xử lý";
+        if(Session::get('coupon')){
+            foreach(Session::get('coupon') as $key =>$cou){
+              
+                  $order_data['coupon_code'] = $cou['coupon_code'] ;
+                  if($cou['coupon_condition']==1){
+                    $order_data['order_total'] =  round(
+                        floatval(preg_replace("/[^-0-9\.]/","",Session::get('fee')))*$cou['coupon_number']/100 +
+                        floatval(preg_replace("/[^-0-9\.]/","",Cart::total())),-0);
+                  }
+                  else if($cou['coupon_condition']==2){
+                    $order_data['order_total'] = round(floatval(preg_replace("/[^-0-9\.]/","",Cart::priceTotal())) + Session::get('fee') - $cou['coupon_number'],-3);
+                  }
+                  else{
+                    $order_data['order_total'] =round(floatval(preg_replace("/[^-0-9\.]/","",Cart::total())),-4);
+                  }
+
+            }
+        }else{
+             $order_data['coupon_code'] = '';
+            $order_data['order_total'] = round(floatval(preg_replace("/[^-0-9\.]/","",Cart::total())),-4);
+      
+        }
+      
+         $order_data['order_status'] = "Đang chờ xử lý";
         $order_id = DB::table('tbl_order')->insertGetId($order_data);
         // order detail
         $content = Cart::content();
@@ -113,7 +189,6 @@ class CheckoutController extends Controller
         else{
 
         }
-        
         return Redirect::to('/payment');
     }
 
@@ -136,9 +211,6 @@ class CheckoutController extends Controller
         else{
             return Redirect::to('/login-checkout');
         }
-
-   
-       
     }
 
     public function login_facebook($id){

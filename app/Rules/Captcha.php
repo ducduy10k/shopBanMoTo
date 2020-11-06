@@ -39,6 +39,6 @@ class Captcha implements Rule
      */
     public function message()
     {
-        return 'The validation error message.';
+        return 'Vui lòng nhập đầy đủ thông tin.';
     }
 }
