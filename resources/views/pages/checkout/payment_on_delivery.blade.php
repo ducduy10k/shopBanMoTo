@@ -2,6 +2,6 @@
 @section('content')
 
 <div>
-    <p>Thak you</p>
+    <h1 style="text-align:center;color: orange;">Thank you for purchasing it .</h1>
 </div>
 @endsection

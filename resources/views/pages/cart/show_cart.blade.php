@@ -100,28 +100,19 @@ input.cart_quantity_input {
 <section id="do_action">
     <div>
         <div class="heading">
-            <h3>What would you like to do next?</h3>
-            <p>Choose if you have a discount code or reward points you want to use or would like to estimate your
-                delivery cost.</p>
+            <h3></h3>
+            <p></p>
         </div>
         <div class="row">
 
             <div class="col-sm-6">
                 <div class="total_area">
                     <ul>
-                        <li>Tổng <span>{{Cart::subtotal().' '.'VNĐ'}}</span></li>
-                        
-                        <li>Phí vận chuyển <span>Free</span></li>
-                        <li>Thành tiền <span>{{Cart::subtotal().' '.'VNĐ'}}</span></li>
+                        <li>Thành tiền :<span>{{Cart::subtotal().' '.'VNĐ'}}</span></li>
                     </ul>
-
-
-
                     <?php
                                     $customer_id =Session::get('customer_id');
                                     if($customer_id!=NULL){
-
-                                    
                                 ?>
                     <li> <a class="btn btn-default check_out" href="{{URL::to('/checkout')}}">Thanh toán</a>
                     </li>

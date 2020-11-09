@@ -6,7 +6,14 @@
     <!--product-details-->
     <div class="col-sm-5">
         <div class="view-product">
-            <img src="{{URL::to('public/upload/product/'.$deltail_pro->product_image)}}" alt="" />
+            <ul id="imageGallery">
+            @foreach($gallery as $key =>$gal)
+                <li data-thumb="{{URL::to('public/upload/gallery/'.$gal->gallery_image)}}" data-src="{{URL::to('public/upload/gallery/'.$gal->gallery_image)}}">
+                    <img src="{{URL::to('public/upload/gallery/'.$gal->gallery_image)}}" />
+                </li>
+                @endforeach
+            </ul>
+            
         </div>
         <div id="similar-product" class="carousel slide" data-ride="carousel">
             <!-- Controls -->
@@ -54,7 +61,6 @@
         <ul class="nav nav-tabs">
             <li class="active"><a href="#description" data-toggle="tab">Mô tả </a></li>
             <li><a href="#details" data-toggle="tab">Chi tiết </a></li>
-            <li><a href="#reviews" data-toggle="tab">Đánh giá(5)</a></li>
         </ul>
     </div>
     <div class="tab-content">
@@ -65,30 +71,10 @@
         <div class="tab-pane fade " id="details">
             <p>{!!$deltail_pro->product_content!!}</p>
         </div>
-        <div class="tab-pane fade " id="reviews">
-            <div class="col-sm-12">
-                <ul>
-                    <li><a href=""><i class="fa fa-user"></i>EUGEN</a></li>
-                    <li><a href=""><i class="fa fa-clock-o"></i>12:41 PM</a></li>
-                    <li><a href=""><i class="fa fa-calendar-o"></i>31 DEC 2014</a></li>
-                </ul>
-                <p></p>
-                <form action="#">
-                    <span>
-                        <input type="text" placeholder="Your Name" />
-                        <input type="email" placeholder="Email Address" />
-                    </span>
-                    <textarea name=""></textarea>
-                    <b>Rating: </b> <img src="images/product-details/rating.png" alt="" />
-                    <button type="button" class="btn btn-default pull-right">
-                        Submit
-                    </button>
-                </form>
-            </div>
-        </div>
     </div>
 </div>
-<div class="fb-comments" data-href="http://localhost:8080/shopbanmoto/chi-tiet-san-pham/{{$deltail_pro->product_id}}" data-numposts="20" data-width=""></div>
+<div class="fb-comments" data-href="http://localhost:8080/shopbanmoto/chi-tiet-san-pham/{{$deltail_pro->product_id}}"
+    data-numposts="20" data-width=""></div>
 <!--/category-tab-->
 @endforeach
 <div class="recommended_items">

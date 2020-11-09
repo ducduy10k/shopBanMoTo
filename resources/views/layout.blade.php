@@ -38,6 +38,10 @@
     {{-- css modal map --}}
     <link rel="stylesheet" href="{{asset('public/frontend/css/MapBox.css')}}">
     <link rel="stylesheet" href="{{asset('public/frontend/css/button.css')}}">
+    {{-- jQuery slide --}}
+    <link rel="stylesheet" href="{{asset('public/frontend/css/lightgallery.min.css')}}">
+    <link rel="stylesheet" href="{{asset('public/frontend/css/lightslider.css')}}">
+    <link rel="stylesheet" href="{{asset('public/frontend/css/prettify.css')}}">
 
 </head>
 <style>
@@ -149,10 +153,6 @@ body {
                                             href="https://www.facebook.com/sharer/sharer.php?u={{'http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']}}&amp;src=sdkpreparse"><i
                                                 class="fa fa-facebook"></i></a></div>
                                 </li>
-
-                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                                <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-                                <li><a href="#"><i class="fa fa-dribbble"></i></a></li>
                                 <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
                             </ul>
                         </div>
@@ -570,7 +570,7 @@ body {
                         </div>
                         brands_products-->
 
-                       
+
                     </div>
                 </div>
 
@@ -745,9 +745,13 @@ body {
         type="text/css" />
     <!-- Capcha -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-
+    <!-- Map boxx -->
     <script src="{{asset('public/frontend/js/MapBox.js')}}"></script>
     <script src="{{asset('public/frontend/js/custom.js')}}"></script>
+    <!-- jQuery slider -->
+    <script src="{{asset('public/frontend/js/lightgallery-all.min.js')}}"></script>
+    <script src="{{asset('public/frontend/js/lightslider.js')}}"></script>
+
     <script>
     var urlH = 'http://localhost:8080/shopbanmoto';
     var m = <?php echo json_encode($all_shop);?>;
@@ -808,46 +812,94 @@ body {
     })
     </script>
 
-    
-    <script type = "text/javascript" >
-        $(document).ready(function() {
-            $('.calculate_delivery').click(function() {
-               var shipping_name= $('.shipping_name').val();
-               var shipping_email= $('.shipping_email').val();
-               var shipping_address= $('.shipping_address').val();
-               var  shipping_notes= $('.shipping_notes').val();
-               var  shipping_phone= $('.shipping_phone').val();
-                var matp = $('.city').val();
-                var maqh = $('.province').val();
-                var xaid = $('.wards').val();
-                var _token = $('input[name="_token"]').val();
-                if (matp == '' && maqh == '' && xaid == ''||shipping_name == ''||shipping_email == ''||shipping_address == ''||shipping_notes == ''||shipping_phone == '') {
-                    alert('Làm ơn chọn để tính phí vận chuyển');
-                } else {
-                    $.ajax({
-                        url: "{{url('/save-checkout-customer')}}",
-                        method: 'POST',
-                        data: {
-                            shipping_name:shipping_name,
-                            shipping_email:shipping_email,
-                            shipping_address:shipping_address,
-                            shipping_notes:shipping_notes,
-                            shipping_phone:shipping_phone,
-                            matp: matp,
-                            maqh: maqh,
-                            xaid: xaid,
-                            _token: _token,
-                        },
-                        success: function() {
-                            $(location).attr('href', urlH + '/payment');
-                        }
-                    });
-                }
-            });
+
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $('.calculate_delivery').click(function() {
+            var shipping_name = $('.shipping_name').val();
+            var shipping_email = $('.shipping_email').val();
+            var shipping_address = $('.shipping_address').val();
+            var shipping_notes = $('.shipping_notes').val();
+            var shipping_phone = $('.shipping_phone').val();
+            var matp = $('.city').val();
+            var maqh = $('.province').val();
+            var xaid = $('.wards').val();
+            var _token = $('input[name="_token"]').val();
+            if (matp == '' && maqh == '' && xaid == '' || shipping_name == '' || shipping_email == '' ||
+                shipping_address == '' || shipping_notes == '' || shipping_phone == '') {
+                alert('Làm ơn chọn để tính phí vận chuyển');
+            } else {
+                $.ajax({
+                    url: "{{url('/save-checkout-customer')}}",
+                    method: 'POST',
+                    data: {
+                        shipping_name: shipping_name,
+                        shipping_email: shipping_email,
+                        shipping_address: shipping_address,
+                        shipping_notes: shipping_notes,
+                        shipping_phone: shipping_phone,
+                        matp: matp,
+                        maqh: maqh,
+                        xaid: xaid,
+                        _token: _token,
+                    },
+                    success: function() {
+                        $(location).attr('href', urlH + '/payment');
+                    }
+                });
+            }
         });
+    });
     </script>
 
-  
+    <!-- Gallert   -->
+    <script>
+    $(document).ready(function() {
+        $('#imageGallery').lightSlider({
+            gallery: true,
+            item: 1,
+            loop: true,
+            thumbItem: 6,
+            slideMargin: 0,
+            enableDrag: false,
+            currentPagerPosition: 'left',
+            onSliderLoad: function(el) {
+                el.lightGallery({
+                    selector: '#imageGallery .lslide'
+                });
+            }
+        });
+    });
+    </script>
+
+    <!-- Sort -->
+    <script>
+    $(function() {
+
+        $('#sort').on('change', function() {
+            var url = $(this).val();
+            if(url){
+                window.location = url
+            }
+            return false;
+            // $.ajax({
+            //     url: "{{url('/select-delivery-home')}}",
+            //     method: 'POST',
+            //     data: {
+            //         action: action,
+            //         ma_id: ma_id,
+            //         _token: _token
+            //     },
+            //     success: function(data) {
+            //         $('#' + result).html(data);
+            //     }
+            // });
+        });
+
+
+    })
+    </script>
+
     <div id="fb-root"></div>
     <!-- Shase facebook -->
     <script async defer crossorigin="anonymous"

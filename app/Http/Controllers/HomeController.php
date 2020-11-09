@@ -105,7 +105,7 @@ class HomeController extends Controller
         ]);
 
         $data  = array();
-        $data['phone_number'] = $request->customer_phone;
+        $data['phone'] = $request->phone_number;
         DB::table('tbl_phone_request')->insert($data);
         Session::put('message','Đã gửi thành công');
         return Redirect::to('/');

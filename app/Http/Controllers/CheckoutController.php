@@ -155,6 +155,10 @@ class CheckoutController extends Controller
                   else{
                     $order_data['order_total'] =round(floatval(preg_replace("/[^-0-9\.]/","",Cart::total())),-4);
                   }
+                  $cop = DB::table('tbl_coupon')->where('coupon_code','=',$cou['coupon_code'])->first();
+                  $data1  = array();
+                    $data1['coupon_time'] = $cop->coupon_time - 1;
+                  DB::table('tbl_coupon')->where('coupon_code','=',$cou['coupon_code'])->update($data1);
 
             }
         }else{

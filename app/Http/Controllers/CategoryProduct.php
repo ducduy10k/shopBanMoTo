@@ -83,15 +83,48 @@ class CategoryProduct extends Controller
 
     //End function admin page
     public function show_category_home($category_id){
+       
         $cate_product = DB::table('tbl_category_product')->where('category_status','1')->orderby('category_id','desc')->get();
         $brand_product = DB::table('tbl_brand')->where('brand_status','1')->orderby('brand_id','desc')->get();
         $slide_product = DB::table('tbl_slide_home')->where('slide_status','1')->orderby('slide_id','desc')->get();
         $all_shop =DB::table('tbl_shop_info')->where('shop_status','1')->orderby('shop_id','asc')->get();
-
-        $category_by_id = DB::table('tbl_product')
+        if(isset($_GET['sort_by'])){
+             $sort_by = $_GET['sort_by'];
+             if($sort_by == 'giam_dan'){
+                $category_by_id = DB::table('tbl_product')
+                ->join('tbl_category_product','tbl_product.category_id','=','tbl_category_product.category_id')
+                ->where('tbl_product.category_id',$category_id)->orderby('product_price','asc')
+                ->paginate(9)->appends(request()->query());
+            }
+            if($sort_by == 'tang_dan'){
+                $category_by_id = DB::table('tbl_product')
+                ->join('tbl_category_product','tbl_product.category_id','=','tbl_category_product.category_id')
+                ->where('tbl_product.category_id',$category_id)->orderby('product_price','desc')
+                ->paginate(9)->appends(request()->query());
+            }
+            if($sort_by == 'a_z'){
+                $category_by_id = DB::table('tbl_product')
+                ->join('tbl_category_product','tbl_product.category_id','=','tbl_category_product.category_id')
+                ->where('tbl_product.category_id',$category_id)->orderby('product_name','asc')
+                ->paginate(9)->appends(request()->query());
+            }
+            
+            if($sort_by == 'z_a'){
+                $category_by_id = DB::table('tbl_product')
+                ->join('tbl_category_product','tbl_product.category_id','=','tbl_category_product.category_id')
+                ->where('tbl_product.category_id',$category_id)
+                ->orderby('product_name','desc')
+                ->paginate(9)->appends(request()->query());
+            }
+        }
+        else{
+             $category_by_id = DB::table('tbl_product')
         ->join('tbl_category_product','tbl_product.category_id','=','tbl_category_product.category_id')
         ->where('tbl_product.category_id',$category_id)
-        ->paginate(9);
+         ->orderby('product_id','desc')
+        ->paginate(9)->appends(request()->query());
+        }
+       
         $category_name =  DB::table('tbl_category_product')->where('category_id',$category_id)->limit(1)->get();
         return view('pages.category.show_category')
         ->with('category', $cate_product)

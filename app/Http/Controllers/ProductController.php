@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use Session ;
+use App\Gallery;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Redirect;
 session_start();
@@ -121,8 +122,10 @@ class ProductController extends Controller
         foreach($detail_product as $key =>$val){
             $cate_id = $val->category_id;
             $brand_id = $val->brand_id;
+            $product_id = $val->product_id;
         }
 
+        $gallery = Gallery::where('product_id',$product_id)->get();
        
         $related_product =  DB::table('tbl_product')
         ->join('tbl_brand','tbl_product.brand_id','=','tbl_brand.brand_id')
@@ -137,6 +140,7 @@ class ProductController extends Controller
         ->with('all_slide',$slide_product)
         ->with('detail_product', $detail_product)
         ->with('related_product', $related_product)
-        ->with('all_shop',$all_shop);
+        ->with('all_shop',$all_shop)
+        ->with('gallery',$gallery);
     }
 }
