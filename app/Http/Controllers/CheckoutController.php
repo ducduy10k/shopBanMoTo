@@ -13,7 +13,7 @@ use App\City;
 use App\Province;
 use App\Wards;
 use App\Feeship;
-
+use Mail;
 
 
 class CheckoutController extends Controller
@@ -146,14 +146,14 @@ class CheckoutController extends Controller
                   $order_data['coupon_code'] = $cou['coupon_code'] ;
                   if($cou['coupon_condition']==1){
                     $order_data['order_total'] =  round(
-                        floatval(preg_replace("/[^-0-9\.]/","",Session::get('fee')))*$cou['coupon_number']/100 +
-                        floatval(preg_replace("/[^-0-9\.]/","",Cart::total())),-0);
+                        floatval(preg_replace("/[^-0-9\.]/","",Session::get('fee'))) - $cou['coupon_number']/100*floatval(preg_replace("/[^-0-9\.]/","",Cart::priceTotal()))  +
+                        floatval(preg_replace("/[^-0-9\.]/","",Cart::priceTotal())),-0);
                   }
                   else if($cou['coupon_condition']==2){
                     $order_data['order_total'] = round(floatval(preg_replace("/[^-0-9\.]/","",Cart::priceTotal())) + Session::get('fee') - $cou['coupon_number'],-3);
                   }
                   else{
-                    $order_data['order_total'] =round(floatval(preg_replace("/[^-0-9\.]/","",Cart::total())),-4);
+                    $order_data['order_total'] =round(floatval(preg_replace("/[^-0-9\.]/","",Cart::priceTotal())) + Session::get('fee'),-2);
                   }
                   $cop = DB::table('tbl_coupon')->where('coupon_code','=',$cou['coupon_code'])->first();
                   $data1  = array();

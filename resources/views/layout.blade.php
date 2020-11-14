@@ -102,6 +102,9 @@ body {
 .mb-5 {
     margin-bottom: 5px;
 }
+.lSGallery img {
+    height:40px !important;
+}
 </style>
 <!--/head-->
 
@@ -153,7 +156,6 @@ body {
                                             href="https://www.facebook.com/sharer/sharer.php?u={{'http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']}}&amp;src=sdkpreparse"><i
                                                 class="fa fa-facebook"></i></a></div>
                                 </li>
-                                <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
                             </ul>
                         </div>
                     </div>
@@ -176,8 +178,6 @@ body {
                     <div class="col-sm-8">
                         <div class="shop-menu pull-right">
                             <ul class="nav navbar-nav">
-                                <li><a href="#"><i class="fa fa-star"></i> Yêu thích</a></li>
-                                </li>
                                 <?php
                                     $customer_id =Session::get('customer_id');
                                     $shipping_id =Session::get('shipping_id');

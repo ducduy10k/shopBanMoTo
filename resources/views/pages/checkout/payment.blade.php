@@ -103,11 +103,7 @@
                                     <td>{{number_format(((float)(preg_replace("/[^-0-9\.]/","",Cart::priceTotal())))).' '.'đ'}}
                                     </td>
                                 </tr>
-                                {{-- <tr>
-                                    <td>Thuế</td>
-                                    <td>{{number_format(((float)(preg_replace("/[^-0-9\.]/","",Cart::tax())))).' '.'đ'}}
-                        </td>
-                    </tr>--}}
+                              
 
 
                     <tr class="shipping-cost">
@@ -165,29 +161,37 @@
                         <td>Thành tiền</td>
                         <td>
                             @if(Session::get('coupon'))
-                            @foreach(Session::get('coupon') as $key =>$cou)
+                                @foreach(Session::get('coupon') as $key =>$cou)
 
-                            @if($cou['coupon_condition'] == 2)
-                            @php
-                            echo '';
-                            echo ''.number_format(round(floatval(preg_replace("/[^-0-9\.]/","",Cart::priceTotal())) + Session::get('fee') - $cou['coupon_number'],-3));
-                            echo ' đ'
-                            @endphp
+                                @if($cou['coupon_condition'] == 2)
+                                @php
+                                echo '';
+                                echo ''.number_format(round(floatval(preg_replace("/[^-0-9\.]/","",Cart::priceTotal())) + Session::get('fee') - $cou['coupon_number'],-2));
+                                echo ' đ'
+                                @endphp
 
-                            @elseif($cou['coupon_condition'] == 1)
-                            @php
-                            echo '';
-                            echo ''.number_format(round(
-                            floatval(preg_replace("/[^-0-9\.]/","",Session::get('fee')))*$cou['coupon_number']/100 +
-                            floatval(preg_replace("/[^-0-9\.]/","",Cart::total())),-0));
-                            echo ' đ'
-                            @endphp
-                            @endif
-                            @endforeach
+                                @elseif($cou['coupon_condition'] == 1)
+                                @php
+                                echo '';
+
+                                echo ''.number_format(round(
+                                floatval(preg_replace("/[^-0-9\.]/","",Session::get('fee'))) - $cou['coupon_number']/100*floatval(preg_replace("/[^-0-9\.]/","",Cart::priceTotal()))  +
+                                floatval(preg_replace("/[^-0-9\.]/","",Cart::priceTotal())),-2));
+                                echo ' đ'
+
+                                @endphp
+                                @else
+                                @php
+                                echo '';
+                                echo ''.number_format(floatval(preg_replace("/[^-0-9\.]/","",Cart::priceTotal())) + Session::get('fee'));
+                                echo ' đ';
+                                @endphp
+                                @endif
+                                @endforeach
                             @else
                             @php
                             echo '';
-                            echo ''.number_format(round(floatval(preg_replace("/[^-0-9\.]/","",Cart::total())),-4));
+                            echo ''.number_format(floatval(preg_replace("/[^-0-9\.]/","",Cart::priceTotal())) + Session::get('fee'));
                             echo ' đ';
                             @endphp
                             @endif
